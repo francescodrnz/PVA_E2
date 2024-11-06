@@ -19,7 +19,8 @@ a_cruise = 316.0; % [m/s]
 visc_dinamica_cruise = 1.5984e-5; % [kg/(m*s)]
 
 % Matching chart
-Vs = 140; % [km/h]
+Vstall = 140; % [km/h]
+g = 9.81; % [m/s^2]
 b10 = 0.2792;
 b11 = -0.03285;
 b12 = -0.007541;

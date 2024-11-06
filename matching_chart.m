@@ -1,0 +1,11 @@
+% CL clean
+CLmax_2D_clean = 1.5; % controllare
+sweep25 = 0;
+CLmax_3D_clean = 0.9*CLmax_2D_clean*cosd(sweep25);
+
+% CL flapped
+Sflap_S = 0.7;
+deltaCL_flap = 1.35; % fowler flap
+
+
+% decollo

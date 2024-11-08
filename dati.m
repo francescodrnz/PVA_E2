@@ -19,7 +19,7 @@ a_cruise = 316.0; % [m/s]
 visc_dinamica_cruise = 1.5984e-5; % [kg/(m*s)]
 
 % Matching chart
-Vstall = 140; % [km/h]
+Vstall = 200; % [km/h]
 g = 9.81; % [m/s^2]
 b10 = 0.2792;
 b11 = -0.03285;
@@ -28,4 +28,6 @@ b20 = 0.01076;
 b21 = -0.007067;
 b22 = 0.001276;
 kOEI = 1/2; % motori operativi / motori totali
-etaP = 0.85; % efficienza elica
+etaP = 0.75; % efficienza elica
+oswald_livello0 = 0.8; % fattore di Oswald
+k_polare_livello0 = 1/(pi*AR*oswald_livello0); % calcolo Cd

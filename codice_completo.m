@@ -1,4 +1,4 @@
-clearvars;close all;clc;dati;requisiti;fusoliera;
+clearvars;close all;clc;dati;requisiti;%fusoliera;
 
 % ciclo principale
 % definisco vettori delle variabili di design
@@ -11,7 +11,6 @@ taper_ratio_vect = [0.48 0.50 0.53]; % []
 
 % primo blocco: matching chart per avere T/W, servono alcuni valori della
 % polare che non abbiamo.
-Cd0_livello0 = 0.017; %valore che ho usato per fare il matching chart preliminare
 Cd0 = Cd0_livello0; % inizializzo valore del ciclo
 k_polare = k_polare_livello0;
 % altri...
@@ -52,7 +51,7 @@ for i_W_S = 1:length(W_S_vect)
 
                         % MATCHING CHART
                         matching_chart;
-                        T_curr = thrust_ratio_des * WTO_curr; % [kg] output del matching chart
+                        P_curr = P_W_des * WTO_curr; % [kg] output del matching chart
                         % AERODINAMICA
                         aerodinamica;
                         % PESI

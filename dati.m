@@ -18,8 +18,14 @@ rho_cruise = 0.6527; % [kg/m^3]
 a_cruise = 316.0; % [m/s]
 visc_dinamica_cruise = 1.5984e-5; % [kg/(m*s)]
 
+%dati di test
+S_ref = 55.2;
+b = (24.7-2.88);
+AR = b^2/S_ref;
+Cd0_livello0 = 0.02;
+
 % Matching chart
-Vstall = 200; % [km/h]
+Vstall = 180; % [km/h]
 g = 9.81; % [m/s^2]
 b10 = 0.2792;
 b11 = -0.03285;
@@ -29,5 +35,6 @@ b21 = -0.007067;
 b22 = 0.001276;
 kOEI = 1/2; % motori operativi / motori totali
 etaP = 0.75; % efficienza elica
+etaPCruise = 0.85; % efficienza elica in crociera
 oswald_livello0 = 0.8; % fattore di Oswald
 k_polare_livello0 = 1/(pi*AR*oswald_livello0); % calcolo Cd

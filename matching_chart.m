@@ -16,7 +16,7 @@ W_S_max = 0.5*rho_SL*(1.136*Vstall*kmph2mps)^2*CL_max_flapped/g; % [kg/m^2]
 % decollo
 a1 = b10 + b11*CL_max_flapped + b12*CL_max_flapped^2;
 a2 = b20 + b21*CL_max_flapped + b22*CL_max_flapped^2;
-P_W_decollo = a1*W_S_des + a2*W_S_des^2; % [W/kg] % unità di misura????
+P_W_decollo = a1*W_S_des + a2*W_S_des^2; % [W/kg]
 
 % Climb
 C_D_flap = 0.9 * (1/4.1935)^1.38 * Sflap/S_ref * sind(15)^2; % check: cflap/c

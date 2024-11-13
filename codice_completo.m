@@ -7,6 +7,7 @@ AR_vect = [7 8 9 10 11]; % []
 t_c_vect = [0.12 0.14]; % []
 M_vect = [0.38 0.40 0.42]; % []
 taper_ratio_vect = [0.48 0.50 0.53]; % []
+sweep25_des = 0;
 
 % primo blocco: matching chart per avere T/W, servono alcuni valori della
 % polare che non abbiamo.

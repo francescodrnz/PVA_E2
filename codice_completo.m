@@ -1,4 +1,4 @@
-clearvars;close all;clc;dati;requisiti;%fusoliera;
+clearvars;close all;clc;requisiti;dati;%fusoliera;
 
 % ciclo principale
 % definisco vettori delle variabili di design
@@ -49,8 +49,8 @@ for i_W_S = 1:length(W_S_vect)
                         % script delle varie parti
 
                         % MATCHING CHART
-                        matching_chart;
-                        P_curr = P_W_des * WTO_curr; % [kg] output del matching chart
+                        matching_chart_script;
+                        P_curr = P_W_des * WTO_curr; % [W] output del matching chart
                         % AERODINAMICA
                         aerodinamica;
                         % PESI

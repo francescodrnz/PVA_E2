@@ -18,6 +18,7 @@ a_SL = 340.3; % [m/s]
 h_cruise = 20000*ft2m; % [m]
 rho_cruise = 0.6527; % [kg/m^3]
 a_cruise = 316.0; % [m/s]
+V_cruise = M_cruise * a_cruise; % [m/s]
 visc_dinamica_cruise = 1.5984e-5; % [kg/(m*s)]
 
 %dati di test

@@ -1,5 +1,5 @@
 passeggeri = 40;
-range = 600*nm2km; % [km]
+range = 1111.2; % [km]
 BFL = 1100; % [m]
 
 % missione

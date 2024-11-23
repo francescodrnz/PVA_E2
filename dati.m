@@ -9,6 +9,8 @@ nm2km = 1.852;
 mps2kmph = 3.6;
 kmph2mps = 1 / mps2kmph;
 l2gal = 3.785411784;
+ftpmin2mps = ft2m / 60;
+kt2mps = nm2km*kmph2mps;
 
 % Dati
 rho_SL = 1.225; % [kg/m^3]
@@ -38,3 +40,11 @@ etaP = 0.75; % efficienza elica
 etaPCruise = 0.85; % efficienza elica in crociera
 oswald_livello0 = 0.8; % fattore di Oswald
 k_polare_livello0 = 1/(pi*AR*oswald_livello0); % calcolo Cd
+
+% missione
+etaEm = 0.95;
+etaGear = 0.98;
+ROC = ROC * ftpmin2mps; % [m/s]
+ROD = ROD * ftpmin2mps; % [m/s]
+IAS_climb = IAS_climb * kt2mps; % [m/s]
+IAS_descent = IAS_descent * kt2mps; % [m/s]

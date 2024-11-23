@@ -1,6 +1,5 @@
 % CL clean
 CLmax_2D_clean = 1.5; % controllare
-sweep25_des = 0;
 CLmax_3D_clean = 0.9*CLmax_2D_clean*cosd(sweep25_des);
 
 % CL flapped

@@ -2,7 +2,7 @@ clearvars;close all;clc;dati;requisiti;%fusoliera;
 
 % ciclo principale
 % definisco vettori delle variabili di design
-W_S_vect = [150 200 250 300]; % [kg/m^2]
+W_S_vect = [200 250 300]; % [kg/m^2]
 AR_vect = [7 8 9 10 11]; % []
 t_c_vect = [0.12 0.14]; % []
 M_vect = [0.38 0.40 0.42]; % []

@@ -63,7 +63,7 @@ P_W_AppClimb = 1 / (kOEI * etaP) * ...
 % Cruise
 P_W_cruise = ((0.5*rho_cruise*(V_cruise*kmph2mps)^3) / (etaPCruise*W_S_des)) * ...
     (Cd0 + k_polare * (2*W_S_des*g/(rho_cruise*(V_cruise*kmph2mps)^2))^2); % [W/kg]
-P_W_cruise = P_W_cruise/(rho_cruise/rho_SL)^0.75; % riferisco il matching chart al SL % anche in E1 ^0.75?
+P_W_cruise = P_W_cruise/(rho_SL/rho_cruise);%(rho_cruise/rho_SL)^0.75; % riferisco il matching chart al SL % anche in E1 ^0.75?
 
 
 % design point

@@ -45,17 +45,18 @@ Q_vert = 1.05;
 Svert_Sref = 0.2;
 Swet_vert = Svert_Sref*S_ref*(1.997+0.52*t_c_vert);
 % nacelle
-D_nac = 0.04*sqrt(P_curr/2)*ft2m; % [m]
-L_nac = 0.07*sqrt(P_curr/2)*ft2m; % [m] da formula
-A_nac = pi*(D_nac/2)^2;
-cF_nac = 0.455/(log10(Reynolds_1metro*L_nac)^2.58+(1+0.144*M_des)^0.65); 
-f_nac = (L_nac*m2ft)/sqrt(4/pi*A_nac*sqm2sqft); % fattore geometrico
-FF_nac = (1+60/f_nac^3+f_nac/400);
-Q_nac = 1.0;
-Swet_nac = pi*D_nac*L_nac;
+% D_nac = 0.04*sqrt(P_curr/2)*ft2m; % [m]
+% L_nac = 0.07*sqrt(P_curr/2)*ft2m; % [m] da formula
+% A_nac = pi*(D_nac/2)^2;
+% cF_nac = 0.455/(log10(Reynolds_1metro*L_nac)^2.58+(1+0.144*M_des)^0.65); 
+% f_nac = (L_nac*m2ft)/sqrt(4/pi*A_nac*sqm2sqft); % fattore geometrico
+% FF_nac = (1+60/f_nac^3+f_nac/400);
+% Q_nac = 1.0;
+% Swet_nac = pi*D_nac*L_nac;
 
 Cd0 = (cF_ala*FF_ala*Q_ala*Swet_ala + cF_fus*FF_fus*Q_fus*Swet_fus + cF_orizz*FF_orizz*Q_orizz*Swet_orizz + ...
-    cF_vert*FF_vert*Q_vert*Swet_vert + cF_nac*FF_nac*Q_nac*Swet_nac) / S_ref;
+    cF_vert*FF_vert*Q_vert*Swet_vert ...+ cF_nac*FF_nac*Q_nac*Swet_nac
+    ) / S_ref;
 
 
 % drag raise

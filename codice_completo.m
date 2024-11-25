@@ -7,7 +7,7 @@ AR_vect = [7 8 9 10 11]; % []
 t_c_vect = [0.12 0.14]; % []
 M_vect = [0.38 0.40 0.42]; % []
 taper_ratio_vect = [0.48 0.50 0.53]; % []
-% phi_ice_vect = [0.20 0.30 0.40 0.50 0.60 0.70 0.80 0.90]; % frazione potenza termica
+phi_ice_vect = [0.20 0.30 0.40 0.50 0.60 0.70 0.80 0.90]; % frazione potenza termica
 sweep25_des = 0;
 
 % primo blocco: matching chart per avere T/W, servono alcuni valori della
@@ -16,7 +16,7 @@ Cd0 = Cd0_livello0; % inizializzo valore del ciclo
 k_polare = k_polare_livello0;
 
 % inizializzazione ciclo
-W_inizializzazione = 10000; % [kg] stima preliminare a caso
+W_inizializzazione = 15000; % [kg] stima preliminare a caso
 
 % parametri ciclo convergenza
 indice_contatore = 0;
@@ -35,7 +35,7 @@ for i_W_S = 1:length(W_S_vect)
                         t_c_des = t_c_vect(i_t_c);
                         M_des = M_vect(i_M);
                         lambda_des = taper_ratio_vect(i_taper);
-                        phi_ice_des = phi_ice_vect(i_phi_ice)
+                        phi_ice_des = phi_ice_vect(i_phi_ice);
 
                         % ciclo di convergenza sul peso
                         delta_WTO = 1000; % [kg] inizializzazione per entrare nel while

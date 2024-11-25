@@ -45,7 +45,11 @@ k_polare_livello0 = 1/(pi*AR*oswald_livello0); % calcolo Cd
 % missione
 etaEm = 0.95;
 etaGear = 0.98;
+etaProp = 0.85;
 ROC = ROC * ftpmin2mps; % [m/s]
 ROD = ROD * ftpmin2mps; % [m/s]
 IAS_climb = IAS_climb * kt2mps; % [m/s]
 IAS_descent = IAS_descent * kt2mps; % [m/s]
+
+% prestazioni
+kc = 0.5; % [kg/(kg*h)]

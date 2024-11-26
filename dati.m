@@ -11,6 +11,8 @@ kmph2mps = 1 / mps2kmph;
 l2gal = 3.785411784;
 ftpmin2mps = ft2m / 60;
 kt2mps = nm2km*kmph2mps;
+hr2sec = 3600;
+sec2hr = 1 / hr2sec;
 
 % Dati
 rho_SL = 1.225; % [kg/m^3]
@@ -52,4 +54,6 @@ IAS_climb = IAS_climb * kt2mps; % [m/s]
 IAS_descent = IAS_descent * kt2mps; % [m/s]
 
 % prestazioni
-kc = 0.5; % [kg/(kg*h)]
+kc = 0.279*1e-3; % [kg/(W*h)]
+taxi_time = 240; % [s]
+takeoff_time = 45; % [s]

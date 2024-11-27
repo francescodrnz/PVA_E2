@@ -1,5 +1,5 @@
 % da sistemare
-W_zero_fuel = WTO_curr*(1-fuel_fraction); % [kg]
+W_zero_fuel = OEW_curr; % [kg]
 W_zero_fuel_lb = W_zero_fuel*kg2lb; % [lb]
 WTO_curr_lb = WTO_curr*kg2lb; % [lb]
 S_ref_ft = S_ref * sqm2sqft; % [ft]

@@ -14,7 +14,7 @@ Cd0 = Cd0_livello0; % inizializzo valore del ciclo
 k_polare = k_polare_livello0;
 
 % inizializzazione ciclo
-W_inizializzazione = 15000; % [kg] stima preliminare a caso
+W_inizializzazione = 12000; % [kg] stima preliminare a caso
 
 % parametri ciclo convergenza
 indice_contatore = 0;
@@ -44,21 +44,18 @@ for i_W_S = 1:length(W_S_vect)
                         V_cruise = M_des*a_cruise; % [m/s]
                         CL_des = 2*W_S_des*g/(rho_cruise*V_cruise^2); % [] CL di crociera
 
-
-                        % script delle varie parti
-
                         % MATCHING CHART
                         matching_chart_script;
                         P_curr = P_W_des * WTO_curr; % [W] output del matching chart
                         % AERODINAMICA
                         aerodinamica;
-                        prestazioni;
-                        % PESI
-                        pesi_script;
 
                         % PRESTAZIONI
                         E_curr = CL_des/CD_curr; % CD_curr da aerodinamica cd0+cdi+cdw
-                        script_prestazioni; % frazioni di peso, fuel fraction, W_fuel/WTO.. codice task 2
+                        prestazioni;
+
+                        % PESI
+                        pesi_script;
 
                         WTO_precedente = WTO_curr;
                         WTO_curr = Wpayload + Wfuel + OEW_curr;

@@ -15,19 +15,19 @@ hr2sec = 3600;
 sec2hr = 1 / hr2sec;
 
 % Dati
+AR_des = 10;
+t_c_des = 0.14;
+Cd0_livello0 = 0.02;
+M_des = 0.4;
+lambda_des = 0.5;
+sweep25_des = 0;
 rho_SL = 1.225; % [kg/m^3]
 a_SL = 340.3; % [m/s]
 h_cruise = 20000*ft2m; % [m]
 rho_cruise = 0.6527; % [kg/m^3]
 a_cruise = 316.0; % [m/s]
-V_cruise = M_cruise * a_cruise; % [m/s]
+V_cruise = M_des * a_cruise; % [m/s]
 visc_dinamica_cruise = 1.5915e-5; % [kg/(m*s)]
-
-%dati di test
-S_ref = 55.2;
-b = (24.7-2.88);
-AR = b^2/S_ref;
-Cd0_livello0 = 0.02;
 
 % Matching chart
 Vstall = 180; % [km/h]
@@ -42,7 +42,7 @@ kOEI = 1/2; % motori operativi / motori totali
 etaP = 0.75; % efficienza elica
 etaPCruise = 0.85; % efficienza elica in crociera
 oswald_livello0 = 0.8; % fattore di Oswald
-k_polare_livello0 = 1/(pi*AR*oswald_livello0); % calcolo Cd
+k_polare_livello0 = 1/(pi*AR_des*oswald_livello0); % calcolo Cd
 
 % missione
 etaEm = 0.95;

@@ -1,6 +1,7 @@
-P_ice = p_ice_perc * P_curr; % [W] potenza termica installata
-P_ice_des = phi_ice_des * P_ice; % potenza ICE funzione di phi_ice
-P_em = P_curr - P_ice; % [W] potenza elettrica installata
+% ricalcolare potenze con Hp
+P_tot = P_curr / (etaGear*etaProp);
+P_em = Hp_des * P_tot / etaEm; % [W] potenza elettrica installata
+P_ice = P_tot - P_em;
 
 dt = 5; % [s]
 % initial conditions
@@ -21,6 +22,7 @@ time = zeros(n_step, 1);
 time(1) = 0;
 E_batt = zeros(n_step, 1);
 E_batt_dot = zeros(n_step, 1);
+phi_em = zeros(n_step, 1);
 
 % taxi out
 i_taxi_out = 0;
@@ -28,12 +30,13 @@ phi_ice_taxi = 0; % taxi-out e -in full electric
 while time(i_taxi_out + 1) < taxi_time
     i_taxi_out = i_taxi_out + 1;
 
-    P_nec(i_taxi_out) = 0.07 * P_curr/(etaGear*etaProp); % [W], full electric
+    P_nec(i_taxi_out) = 0.07 * P_tot / etaEm; % [W], full electric
     % consumo batteria
-    E_batt_dot(i_taxi_out) = - P_nec(i_taxi_out) / etaEm;
+    E_batt_dot(i_taxi_out) = - P_nec(i_taxi_out);
     E_batt(i_taxi_out + 1) = E_batt(i_taxi_out) + E_batt_dot(i_taxi_out) * dt * sec2hr; % [W*h]
+    phi_em(i_taxi_out) = P_nec(i_taxi_out) / P_em;
     % consumo carburante
-    W_dot(i_taxi_out) = phi_ice_taxi * kc * P_ice;
+    W_dot(i_taxi_out) = - phi_ice_taxi * kc * P_ice;
     W(i_taxi_out + 1) = W(i_taxi_out) + W_dot(i_taxi_out) * dt; % [kg]
 
     time(i_taxi_out+1) = time(i_taxi_out) + dt;
@@ -47,12 +50,13 @@ phi_el_takeoff = 1; % full power al decollo
 while (time(i_take_off + 1) - time(i_taxi_out + 1)) < takeoff_time
     i_take_off = i_take_off + 1;
 
-    P_nec(i_take_off) = (P_em + P_ice); % non sicuro
+    P_nec(i_take_off) = (P_em + P_ice);
     % consumo batteria
-    E_batt_dot(i_take_off) = - phi_el_takeoff * P_em / (etaGear*etaProp*etaEm);
+    E_batt_dot(i_take_off) = - phi_el_takeoff * P_em;
     E_batt(i_take_off + 1) = E_batt(i_take_off) + E_batt_dot(i_take_off) * dt * sec2hr; % [W*h]
+    phi_em(i_take_off) = 1;
     % consumo carburante
-    W_dot(i_take_off) = - kc * phi_ice_takeoff * P_ice / (etaGear*etaProp*hr2sec); % [kg/s]
+    W_dot(i_take_off) = - kc * phi_ice_takeoff * P_ice / (hr2sec); % [kg/s]
     W(i_take_off + 1) = W(i_take_off) + W_dot(i_take_off) * dt; % [kg]
 
     time(i_take_off+1) = time(i_take_off) + dt;
@@ -61,7 +65,8 @@ end
 % climb: constant IAS and ROC
 i_climb = i_take_off;
 gamma_climb = atan(ROC/IAS_climb);
-Vx_climb = IAS_climb * cos(gamma_climb);
+Vx_climb = IAS_climb * cos(gamma_climb); % [m/s]
+P_ice_cl = phi_ice_cl * P_ice; % [W]
 
 z = z_start;
 
@@ -78,10 +83,11 @@ while z < h_cruise
     P_nec(i_climb) = P_fly/(etaGear*etaProp); % [W]
 
     % consumo batteria
-    E_batt_dot(i_climb) = - (P_nec(i_climb) - P_ice_des) / (etaGear*etaProp*etaEm);
+    E_batt_dot(i_climb) = - (P_nec(i_climb)/etaEm - P_ice_cl);
     E_batt(i_climb + 1) = E_batt(i_climb) + E_batt_dot(i_climb) * dt * sec2hr; % [W*h]
+    phi_em(i_climb) = - E_batt_dot(i_climb) / P_em;
     % consumo carburante
-    W_dot(i_climb) = - kc * P_ice_des/ (etaGear*etaProp*hr2sec); % [kg/s]
+    W_dot(i_climb) = - kc * P_ice_cl/ hr2sec; % [kg/s]
     W(i_climb + 1) = W(i_climb) + W_dot(i_climb) * dt * sec2hr; % [kg]
 
     z = z + ROC * dt; % [m]
@@ -94,7 +100,7 @@ x = x_start + Vx_climb * time(i_climb+1);
 
 i_cruise = i_climb;
 
-while x < range
+while x < range % range in metri
     i_cruise = i_cruise + 1;
 
     CL(i_cruise) = 2*(W(i_cruise)*g/S)/(rho*V^2); % W si aggiorna

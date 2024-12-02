@@ -15,7 +15,7 @@ Cd0 = Cd0_livello0; % inizializzo valore del ciclo
 k_polare = k_polare_livello0;
 
 % inizializzazione ciclo
-W_inizializzazione = 8000; % [kg] stima preliminare a caso
+W_inizializzazione = 10000; % [kg] stima preliminare a caso
 
 % parametri ciclo convergenza
 indice_contatore = 0;
@@ -99,6 +99,7 @@ for i_W_S = 1:length(W_S_vect)
                         W_services_memo(indice_contatore) = W_services;
                         W_crew_memo(indice_contatore) = W_crew;
                         W_fuel_memo(indice_contatore) = W_fuel;
+                        W_block_fuel_memo(indice_contatore) = W_block_fuel;
                         W_payload_memo(indice_contatore) = W_payload;
                     end
                 end
@@ -106,7 +107,8 @@ for i_W_S = 1:length(W_S_vect)
         end
     end
 end
-
+toc
+tic
 % Creazione della tabella
 T = array2table([W_S_des_memo(1:indice_contatore), W_S_max_memo(1:indice_contatore), 
     WTO_memo(1:indice_contatore), CL_des_memo(1:indice_contatore), ...
@@ -122,14 +124,12 @@ T = array2table([W_S_des_memo(1:indice_contatore), W_S_max_memo(1:indice_contato
     W_avionics_memo(1:indice_contatore), W_engine_sys_memo(1:indice_contatore), ...
     W_furn_memo(1:indice_contatore), W_services_memo(1:indice_contatore), ...
     W_crew_memo(1:indice_contatore), W_fuel_memo(1:indice_contatore), W_fuel_memo(1:indice_contatore)/0.8, ...
-    W_payload_memo(1:indice_contatore)], ...
+    W_block_fuel_memo(1:indice_contatore), W_payload_memo(1:indice_contatore)], ...
     'VariableNames', {'W/S', 'W/S max', 'WTO', 'CL_crociera', ...
-                      'E', 'P_curr','P_tot','P_ice','P_em', 'S', 'OEW', 'W_wing', 'W_fus', 'W_tail', 'W_LG', ...
+                      'E_crociera', 'P_curr','P_tot','P_ice','P_em', 'S', 'OEW', 'W_wing', 'W_fus', 'W_tail', 'W_LG', ...
                       'W_propuls', 'W_fuelsys', 'W_hydr', 'W_elec', 'W_antiice', ...
                       'W_instr', 'W_avionics', 'W_engine_sys', 'W_furn', ...
-                      'W_services', 'W_crew', 'W_fuel', 'V_fuel', 'W_payload'});
-toc
-tic
+                      'W_services', 'W_crew', 'W_fuel', 'V_fuel', 'W_block_fuel', 'W_payload'});
 % Salvataggio della tabella in un file .csv
 writetable(T, 'dati_convergenza.csv');
 toc

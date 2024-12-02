@@ -20,16 +20,18 @@ hp2W = 745.7;
 AR_des = 10;
 t_c_des = 0.14;
 Cd0_livello0 = 0.02;
-M_des = 0.4;
 lambda_des = 0.55;
 sweep25_des = 0;
 rho_SL = 1.225; % [kg/m^3]
 a_SL = 340.3; % [m/s]
-h_cruise = 20000*ft2m; % [m]
 rho_cruise = 0.6527; % [kg/m^3]
 a_cruise = 316.0; % [m/s]
 V_cruise = M_des * a_cruise; % [m/s]
 visc_dinamica_cruise = 1.5915e-5; % [kg/(m*s)]
+a_cruise_diversion = 332.3328; % [m/s]
+rho_cruise_diversion = 1.0014; % [kg/m^3]
+V_cruise_diversion = M_cruise_diversion * a_cruise_diversion; % [m/s]
+
 
 % Matching chart
 Vstall = 180; % [km/h]
@@ -54,6 +56,12 @@ ROC = ROC * ftpmin2mps; % [m/s]
 ROD = ROD * ftpmin2mps; % [m/s]
 IAS_climb = IAS_climb * kt2mps; % [m/s]
 IAS_descent = IAS_descent * kt2mps; % [m/s]
+% diversione
+ROC_diversion = ROC_diversion * ftpmin2mps; % [m/s]
+ROD_diversion = ROD_diversion * ftpmin2mps; % [m/s]
+IAS_climb_diversion = IAS_climb_diversion * kt2mps; % [m/s]
+IAS_descent_diversion = IAS_descent_diversion * kt2mps; % [m/s]
+
 
 % prestazioni
 kc = 0.2675*1e-3; % [kg/(W*h)]

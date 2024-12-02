@@ -29,4 +29,5 @@ W_furn_memo = NaN(num_configurazioni, 1);
 W_services_memo = NaN(num_configurazioni, 1);
 W_crew_memo = NaN(num_configurazioni, 1);
 W_fuel_memo = NaN(num_configurazioni, 1);
+W_block_fuel_memo = NaN(num_configurazioni, 1);
 W_payload_memo = NaN(num_configurazioni, 1);

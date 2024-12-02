@@ -15,6 +15,7 @@ kt2mps = nm2km*kmph2mps;
 hr2sec = 3600;
 sec2hr = 1 / hr2sec;
 hp2W = 745.7;
+W2hp = 1 / hp2W;
 
 % Dati
 AR_des = 10;

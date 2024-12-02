@@ -31,8 +31,12 @@ W_LG = (W_LG_strutt + W_LG_freni + W_LG_pneum + W_LG_contr) * lb2kg; % [kg]
 % propulsione
 W_ice = N_prop*(P_ice/N_prop-12970)/3878; % [kg]
 W_emot = P_em / EMPD; % [kg]
-W_nac = K_nac*(P_tot)*lb2kg; % [kg] nacelle
-W_propulsione = W_nac + W_ice + W_emot; % 
+W_nac = K_nac*(P_em + P_ice)*lb2kg; % [kg] nacelle
+W_propeller = lb2kg*0.1256*N_prop*(12.0546*(P_em + P_ice)*W2hp/N_prop)^0.782; % [kg]
+W_propulsione = W_nac + W_ice + W_emot + W_propeller; % [kg]
+
+% battery
+W_batt = E_batt_inst / (0.8*BED); % kg
 
 % fuel system
 W_fuelsys = 2.71*(b_ref*m2ft/cosd(sweep25_des)*N_serbatoi)^0.956*lb2kg; % [kg]

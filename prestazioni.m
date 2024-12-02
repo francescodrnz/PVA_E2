@@ -272,7 +272,7 @@ CD(i_descent_diversion + 1) = Cd0 + k_polare * CL(i_descent_diversion + 1)^2;
 D(i_descent_diversion + 1) = 1/2*rho*S_ref*IAS_descent_diversion^2*CD(i_descent_diversion + 1);
 
 
-
+E_batt_inst = E_batt(i_descent_diversion+1); % [W*h]
 W_fuel = 1.05*(W(1) - W(i_descent_diversion + 1));
 fuel_fraction = W_fuel/WTO_curr;
 OEW_curr = WTO_curr - W_fuel;

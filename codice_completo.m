@@ -24,6 +24,9 @@ tolleranza = 25; % [kg]
 % Preallocazione degli array per memorizzare i risultati
 preallocazione;
 
+f = waitbar(0,'Please wait...');
+indice_config = 1;
+tot_config = length(W_S_vect)*length(Hp_vect)*length(phi_ice_cl_vect)*length(phi_ice_cr_vect)*length(phi_ice_de_vect);
 % ciclo di dimensionamento
 for i_W_S = 1:length(W_S_vect)
     for i_Hp = 1:length(Hp_vect)
@@ -108,6 +111,8 @@ for i_W_S = 1:length(W_S_vect)
                         W_batt_memo(indice_contatore) = W_batt;
                         E_batt_memo(indice_contatore) = E_batt_inst;
                     end
+                    waitbar(indice_config/tot_config,f,'in progress')
+                    indice_config = indice_config + 1;
                 end
             end
         end

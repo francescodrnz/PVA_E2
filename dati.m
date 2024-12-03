@@ -20,8 +20,8 @@ W2hp = 1 / hp2W;
 % Dati
 AR_des = 10;
 t_c_des = 0.14;
-Cd0_livello0 = 0.02;
 lambda_des = 0.55;
+Cd0_livello0 = 0.02;
 sweep25_des = 0;
 rho_SL = 1.225; % [kg/m^3]
 a_SL = 340.3; % [m/s]

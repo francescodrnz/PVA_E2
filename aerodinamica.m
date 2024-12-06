@@ -25,25 +25,21 @@ Swet_fus = pi*(diametro_esterno_fus^2/2+...
     (diametro_esterno_fus+pi)*L_t/2; % diametro posteriore 1 metro
 % piani di coda
 % orizzontali
-AR_orizz = 5;
-b_orizz = 12.5; % [m]
+b_orizz = sqrt(AR_orizz*S_orizz); % [m]
 cF_orizz = 0.455/(log10(Reynolds_1metro*b_orizz/AR_orizz)^2.58+(1+0.144*M_des)^0.65);
 t_c_orizz = 0.1;
 sweep25_orizz = 29; % [°]
 FF_orizz = (1+0.6/0.5*t_c_orizz+100*t_c_orizz^4)*(1.34*M_des^0.18*cosd(sweep25_orizz)^0.28);
 Q_orizz = 1.05;
-Sorizz_Sref = 0.25;
-Swet_orizz = Sorizz_Sref*S_ref*(1.997+0.52*t_c_orizz);
+Swet_orizz = S_orizz*(1.997+0.52*t_c_orizz);
 % verticale
-AR_vert = 1.8;
-b_vert = 7.25; % [m]
+b_vert = sqrt(AR_vert * S_vert); % [m]
 cF_vert = 0.455/(log10(Reynolds_1metro*b_vert/AR_vert)^2.58+(1+0.144*M_des)^0.65);
 t_c_vert = 0.12;
 sweep25_vert = 34; % [°]
 FF_vert = (1+0.6/0.5*t_c_vert+100*t_c_vert^4)*(1.34*M_des^0.18*cosd(sweep25_vert)^0.28);
 Q_vert = 1.05;
-Svert_Sref = 0.2;
-Swet_vert = Svert_Sref*S_ref*(1.997+0.52*t_c_vert);
+Swet_vert = S_vert*(1.997+0.52*t_c_vert);
 % nacelle
 D_nac = 0.04*sqrt(P_curr/(2*V_cruise*g)*kg2lb)*ft2m; % [m]
 L_nac = 0.07*sqrt(P_curr/(2*V_cruise*g)*kg2lb)*ft2m; % [m] da formula
@@ -55,7 +51,7 @@ Q_nac = 1.0;
 Swet_nac = pi*D_nac*L_nac;
 
 Cd0 = (cF_ala*FF_ala*Q_ala*Swet_ala + cF_fus*FF_fus*Q_fus*Swet_fus + cF_orizz*FF_orizz*Q_orizz*Swet_orizz + ...
-    cF_vert*FF_vert*Q_vert*Swet_vert ...+ cF_nac*FF_nac*Q_nac*Swet_nac
+    cF_vert*FF_vert*Q_vert*Swet_vert + cF_nac*FF_nac*Q_nac*Swet_nac...
     ) / S_ref;
 
 

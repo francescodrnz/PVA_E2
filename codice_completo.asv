@@ -10,7 +10,7 @@ phi_ice_de_vect = [0.1 0.3];
 Hp_vect = [0.1 0.2 0.3 0.4]; % fattore di ibridizzazione
 
 % inizializzazione valori del ciclo
-Cd0 = Cd0_livello0;
+Cd0 = Cd0_livello0; 
 k_polare = k_polare_livello0;
 V_H = V_H_livello0;
 V_V = V_V_livello0;
@@ -115,8 +115,6 @@ for i_W_S = 1:length(W_S_vect)
                         Hp_memo(indice_contatore) = Hp_des;
                         W_batt_memo(indice_contatore) = W_batt;
                         E_batt_memo(indice_contatore) = E_batt_inst;
-                        ADP_memo(indice_contatore) = function_ADP(V_cruise,OEW_curr,2,2.451e-14*D(i_cruise)^3-2.846e-9*D(i_cruise)^2+1.838e-4*D(i_cruise)+0.6321);
-
                     end
                     waitbar(indice_config/tot_config,f,'in progress')
                     indice_config = indice_config + 1;
@@ -164,7 +162,6 @@ data = struct( ...
     'W_fuel', W_fuel_memo(1:indice_contatore), ...
     'V_fuel', W_fuel_memo(1:indice_contatore) / 0.8, ...
     'W_block_fuel', W_block_fuel_memo(1:indice_contatore), ...
-    'W_payload', W_payload_memo(1:indice_contatore), ...
-    'ADP', ADP_memo(1:indice_contatore) ...
+    'W_payload', W_payload_memo(1:indice_contatore) ...
     );
 writetable(struct2table(data), 'dati_convergenza.csv');

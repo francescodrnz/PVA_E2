@@ -15,7 +15,7 @@ else
 end
 
 % coda (T-tail)
-W_tail = (6.39*(Sorizz_Sref+Svert_Sref)*S_ref_ft)*lb2kg; % [kg]
+W_tail = (6.39*(S_orizz+S_vert)*sqm2sqft)*lb2kg; % [kg]
 
 % fusoliera
 W_fus = 1.35*((lunghezza_fus*m2ft)*(diametro_esterno_fus*m2ft))^1.28*lb2kg; % [kg]
@@ -42,7 +42,7 @@ W_batt = E_batt_inst / (0.8*BED); % kg
 W_fuelsys = 2.71*(b_ref*m2ft/cosd(sweep25_des)*N_serbatoi)^0.956*lb2kg; % [kg]
 
 % hydraulic system
-S_ref_hydr = S_ref_ft*(1+1.44*(Sorizz_Sref+Svert_Sref)); % [ft^2] superficie per sistema idraulico
+S_ref_hydr = S_ref_ft + 1.44*(S_orizz+S_vert)*sqm2sqft; % [ft^2] superficie per sistema idraulico
 if S_ref_hydr <= 3000
     W_hydraulic = (45+1.318*S_ref_hydr)*lb2kg; % [kg]
 else
@@ -78,7 +78,7 @@ W_services = (2.529*passeggeri*(range*km2nm/M_des)^0.225)*lb2kg; % [kg]
 % crew: piloti + assistenti
 W_crew = (2*225 + ceil(passeggeri / 50)*155)*lb2kg; % [kg]
 
-OEW_curr = W_wing + W_tail + W_fus + W_LG + W_propulsione + W_fuelsys + W_hydraulic + ...
+OEW_curr = W_wing + W_tail + W_fus + W_batt + W_LG + W_propulsione + W_fuelsys + W_hydraulic + ...
     W_elec + W_pneumatic + W_antiice + W_instr + W_avionics + W_engine_sys + W_furn + W_services + W_crew; % [kg]
 
 W_payload = passeggeri*peso_passeggero + W_cargo; % [kg]

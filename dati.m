@@ -19,8 +19,8 @@ W2hp = 1 / hp2W;
 
 % Dati
 AR_des = 10;
-t_c_des = 0.14;
-lambda_des = 0.55;
+t_c_des = 0.18;
+lambda_des = 0.45;
 Cd0_livello0 = 0.02;
 sweep25_des = 0;
 rho_SL = 1.225; % [kg/m^3]
@@ -63,6 +63,11 @@ ROD_diversion = ROD_diversion * ftpmin2mps; % [m/s]
 IAS_climb_diversion = IAS_climb_diversion * kt2mps; % [m/s]
 IAS_descent_diversion = IAS_descent_diversion * kt2mps; % [m/s]
 
+% aerodinamica
+AR_orizz = 6;
+S_orizz_livello0 = 6; % [m^2]
+AR_vert = 1.6;
+S_vert_livello0 = 5; % [m^2]
 
 % prestazioni
 kc = 0.2675*1e-3; % [kg/(W*h)]
@@ -79,3 +84,7 @@ N_serbatoi = 2;
 ultimate_load_fact = 3.75;
 max_fuel_volume = 5000; % [l]
 peso_passeggero = 93; % [kg]
+
+% stabilita
+V_H_livello0 = 0.9;
+V_V_livello0 = 0.08;

@@ -17,27 +17,20 @@ sec2hr = 1 / hr2sec;
 hp2W = 745.7;
 W2hp = 1 / hp2W;
 
-% atmosfera
-quote = 0:1:(h_cruise+50);
-rho_atm = zeros(1, length(quote));
-for i = 1:length(quote)
-    [~, ~, ~, rho_atm(i)] = atmosisa(quote(i));
-end
-
 % Dati
 AR_des = 10;
-t_c_des = 0.18;
+t_c_des = 0.15;
 lambda_des = 0.45;
 Cd0_livello0 = 0.02;
 sweep25_des = 0;
-rho_SL = 1.225; % [kg/m^3]
-a_SL = 340.3; % [m/s]
-rho_cruise = 0.6527; % [kg/m^3]
-a_cruise = 316.0; % [m/s]
+rho_SL = IntStandAir_SI(0, ['rho']); % [kg/m^3]
+a_SL = IntStandAir_SI(0, ['a']); % [m/s]
+rho_cruise = IntStandAir_SI(h_cruise, ['rho']); % [kg/m^3]
+a_cruise = IntStandAir_SI(h_cruise, ['a']); % [m/s]
 V_cruise = M_des * a_cruise; % [m/s]
-visc_dinamica_cruise = 1.5915e-5; % [kg/(m*s)]
-a_cruise_diversion = 332.3328; % [m/s]
-rho_cruise_diversion = 1.0014; % [kg/m^3]
+visc_dinamica_cruise = IntStandAir_SI(h_cruise, ['mu']); % [kg/(m*s)]
+rho_cruise_diversion = IntStandAir_SI(h_cruise_diversion, ['rho']); % [kg/m^3]
+a_cruise_diversion = IntStandAir_SI(h_cruise_diversion, ['a']); % [m/s]
 V_cruise_diversion = M_cruise_diversion * a_cruise_diversion; % [m/s]
 
 

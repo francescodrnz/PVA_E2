@@ -64,20 +64,22 @@ end
 
 % climb: constant IAS and ROC
 i_climb = i_take_off;
-gamma_climb = atan(ROC/IAS_climb);
 P_ice_cl = phi_ice_cl * P_ice; % [W]
 
 z = z_start;
 
 while z < h_cruise
     i_climb = i_climb + 1;
-    rho = interp1(quote, rho_atm, z, 'linear', 'extrap');
+    rho = IntStandAir_SI(z, ['rho']);
+    conversione_IAS = IAS2TAS(IAS_climb, z);
+    TAS = conversione_IAS(2);
+    gamma_climb = atan(ROC/TAS);
 
-    CL(i_climb) = 2*(W(i_climb)*g/S_ref) / (rho*IAS_climb^2);
+    CL(i_climb) = 2*(W(i_climb)*g/S_ref) / (rho*TAS^2);
     CD(i_climb) = Cd0 + k_polare * CL(i_climb)^2;
-    D(i_climb) = 1/2*rho*S_ref*IAS_climb^2*CD(i_climb);
+    D(i_climb) = 1/2*rho*S_ref*TAS^2*CD(i_climb);
 
-    P_fly = D(i_climb)*IAS_climb + IAS_climb*W(i_climb)*sin(gamma_climb); % [W]
+    P_fly = D(i_climb)*TAS + TAS*W(i_climb)*sin(gamma_climb); % [W]
     P_nec(i_climb) = P_fly/(etaGear*etaProp); % [W]
 
     % consumo batteria
@@ -123,20 +125,22 @@ end
 
 % descent
 i_descent = i_cruise;
-gamma_descent = atan(ROD/IAS_descent);
 P_ice_de = phi_ice_de * P_ice; % [W]
 
 z = h_cruise;
 
 while z > 0
     i_descent = i_descent + 1;
-    rho = interp1(quote, rho_atm, z, 'linear', 'extrap');
+    rho = IntStandAir_SI(z, ['rho']);
+    conversione_IAS = IAS2TAS(IAS_descent, z);
+    TAS = conversione_IAS(2);
+    gamma_descent = atan(ROD/TAS);
 
-    CL(i_descent) = 2*(W(i_descent)*g/S_ref) / (rho*IAS_descent^2);
+    CL(i_descent) = 2*(W(i_descent)*g/S_ref) / (rho*TAS^2);
     CD(i_descent) = Cd0 + k_polare * CL(i_descent)^2;
-    D(i_descent) = 1/2*rho*S_ref*IAS_descent^2*CD(i_descent);
+    D(i_descent) = 1/2*rho*S_ref*TAS^2*CD(i_descent);
 
-    P_fly = D(i_descent)*IAS_descent + IAS_descent*W(i_descent)*sin(gamma_descent); % [W]
+    P_fly = D(i_descent)*TAS + TAS*W(i_descent)*sin(gamma_descent); % [W]
     P_nec(i_descent) = P_fly/(etaGear*etaProp); % [W]
 
     % consumo batteria
@@ -152,9 +156,11 @@ while z > 0
 
 end
 
-CL(i_descent + 1) = 2*(W(i_descent + 1)*g/S_ref) / (rho*IAS_descent^2);
+conversione_IAS = IAS2TAS(IAS_descent, 0);
+TAS = conversione_IAS(2);
+CL(i_descent + 1) = 2*(W(i_descent + 1)*g/S_ref) / (rho_SL*TAS^2);
 CD(i_descent + 1) = Cd0 + k_polare * CL(i_descent + 1)^2;
-D(i_descent + 1) = 1/2*rho*S_ref*IAS_descent^2*CD(i_descent + 1);
+D(i_descent + 1) = 1/2*rho_SL*S_ref*TAS^2*CD(i_descent + 1);
 
 % taxi in
 i_taxi_in = i_descent;
@@ -180,20 +186,22 @@ W_block_fuel = (W(1) - W(i_taxi_in + 1));
 %% diversione
 % climb: constant IAS and ROC
 i_climb_diversion = i_taxi_in;
-gamma_climb_diversion = atan(ROC_diversion/IAS_climb);
 
 z = z_start;
 
 while z < h_cruise_diversion
     i_climb_diversion = i_climb_diversion + 1;
-    rho = interp1(quote, rho_atm, z, 'linear', 'extrap');
+    rho = IntStandAir_SI(z, ['rho']);
+    conversione_IAS = IAS2TAS(IAS_climb_diversion, z);
+    TAS = conversione_IAS(2);
+    gamma_climb_diversion = atan(ROC_diversion/TAS);
 
 
-    CL(i_climb_diversion) = 2*(W(i_climb_diversion)*g/S_ref) / (rho*IAS_climb_diversion^2);
+    CL(i_climb_diversion) = 2*(W(i_climb_diversion)*g/S_ref) / (rho*TAS^2);
     CD(i_climb_diversion) = Cd0 + k_polare * CL(i_climb_diversion)^2;
-    D(i_climb_diversion) = 1/2*rho*S_ref*IAS_climb_diversion^2*CD(i_climb_diversion);
+    D(i_climb_diversion) = 1/2*rho*S_ref*TAS^2*CD(i_climb_diversion);
 
-    P_fly = D(i_climb_diversion)*IAS_climb_diversion + IAS_climb_diversion*W(i_climb_diversion)*sin(gamma_climb_diversion); % [W]
+    P_fly = D(i_climb_diversion)*TAS + TAS*W(i_climb_diversion)*sin(gamma_climb_diversion); % [W]
     P_nec(i_climb_diversion) = P_fly/(etaGear*etaProp); % [W]
 
     % consumo batteria
@@ -238,19 +246,21 @@ end
 
 % descent
 i_descent_diversion = i_cruise_diversion;
-gamma_descent_diversion = atan(ROD_diversion/IAS_descent_diversion);
 
 z = h_cruise_diversion;
 
 while z > 0
     i_descent_diversion = i_descent_diversion + 1;
-    rho = interp1(quote, rho_atm, z, 'linear', 'extrap');
+    rho = IntStandAir_SI(z, ['rho']);
+    conversione_IAS = IAS2TAS(IAS_descent_diversion, z);
+    TAS = conversione_IAS(2);
+    gamma_descent_diversion = atan(ROD_diversion/TAS);
 
-    CL(i_descent_diversion) = 2*(W(i_descent_diversion)*g/S_ref) / (rho*IAS_descent_diversion^2);
+    CL(i_descent_diversion) = 2*(W(i_descent_diversion)*g/S_ref) / (rho*TAS^2);
     CD(i_descent_diversion) = Cd0 + k_polare * CL(i_descent_diversion)^2;
-    D(i_descent_diversion) = 1/2*rho*S_ref*IAS_descent_diversion^2*CD(i_descent_diversion);
+    D(i_descent_diversion) = 1/2*rho*S_ref*TAS^2*CD(i_descent_diversion);
 
-    P_fly = D(i_descent_diversion)*IAS_descent_diversion + IAS_descent_diversion*W(i_descent_diversion)*sin(gamma_descent_diversion); % [W]
+    P_fly = D(i_descent_diversion)*TAS + TAS*W(i_descent_diversion)*sin(gamma_descent_diversion); % [W]
     P_nec(i_descent_diversion) = P_fly/(etaGear*etaProp); % [W]
 
     % consumo batteria
@@ -265,10 +275,11 @@ while z > 0
     time(i_descent_diversion + 1) = time(i_descent_diversion) + dt;
 
 end
-
-CL(i_descent_diversion + 1) = 2*(W(i_descent_diversion + 1)*g/S_ref) / (rho*IAS_descent_diversion^2);
+conversione_IAS = IAS2TAS(IAS_descent_diversion, 0);
+TAS = conversione_IAS(2);
+CL(i_descent_diversion + 1) = 2*(W(i_descent_diversion + 1)*g/S_ref) / (rho_SL*TAS^2);
 CD(i_descent_diversion + 1) = Cd0 + k_polare * CL(i_descent_diversion + 1)^2;
-D(i_descent_diversion + 1) = 1/2*rho*S_ref*IAS_descent_diversion^2*CD(i_descent_diversion + 1);
+D(i_descent_diversion + 1) = 1/2*rho_SL*S_ref*TAS^2*CD(i_descent_diversion + 1);
 
 
 E_batt_inst = E_batt(i_descent_diversion+1); % [W*h]

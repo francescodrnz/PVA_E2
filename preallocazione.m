@@ -1,5 +1,6 @@
 % Calcolo il numero totale di configurazioni possibili
-num_configurazioni = length(W_S_vect)*length(Hp_vect)*length(phi_ice_cl_vect)*length(phi_ice_cr_vect)*length(phi_ice_de_vect);
+num_configurazioni = length(W_S_vect)*length(Hp_vect)*length(phi_ice_cl_vect)*length(phi_ice_cr_vect)*length(phi_ice_de_vect);%*...
+    %length(AR_vect)*length(t_c_vect)*length(lambda_vect);
 
 W_S_des_memo = NaN(num_configurazioni, 1);
 W_S_max_memo = NaN(num_configurazioni, 1);
@@ -45,3 +46,5 @@ ADP_memo = NaN(num_configurazioni, 1);
 AR_memo = NaN(num_configurazioni, 1);
 t_c_memo = NaN(num_configurazioni, 1);
 lambda_memo = NaN(num_configurazioni, 1);
+AR_orizz_memo = NaN(num_configurazioni, 1);
+AR_vert_memo = NaN(num_configurazioni, 1);

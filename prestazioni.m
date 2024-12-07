@@ -71,8 +71,7 @@ z = z_start;
 
 while z < h_cruise
     i_climb = i_climb + 1;
-    [Temp, a, press, rho] = atmosisa(z);
-
+    rho = interp1(quote, rho_atm, z, 'linear', 'extrap');
 
     CL(i_climb) = 2*(W(i_climb)*g/S_ref) / (rho*IAS_climb^2);
     CD(i_climb) = Cd0 + k_polare * CL(i_climb)^2;
@@ -131,7 +130,7 @@ z = h_cruise;
 
 while z > 0
     i_descent = i_descent + 1;
-    [Temp, a, press, rho] = atmosisa(z);
+    rho = interp1(quote, rho_atm, z, 'linear', 'extrap');
 
     CL(i_descent) = 2*(W(i_descent)*g/S_ref) / (rho*IAS_descent^2);
     CD(i_descent) = Cd0 + k_polare * CL(i_descent)^2;
@@ -187,7 +186,7 @@ z = z_start;
 
 while z < h_cruise_diversion
     i_climb_diversion = i_climb_diversion + 1;
-    [Temp, a, press, rho] = atmosisa(z);
+    rho = interp1(quote, rho_atm, z, 'linear', 'extrap');
 
 
     CL(i_climb_diversion) = 2*(W(i_climb_diversion)*g/S_ref) / (rho*IAS_climb_diversion^2);
@@ -245,7 +244,7 @@ z = h_cruise_diversion;
 
 while z > 0
     i_descent_diversion = i_descent_diversion + 1;
-    [Temp, a, press, rho] = atmosisa(z);
+    rho = interp1(quote, rho_atm, z, 'linear', 'extrap');
 
     CL(i_descent_diversion) = 2*(W(i_descent_diversion)*g/S_ref) / (rho*IAS_descent_diversion^2);
     CD(i_descent_diversion) = Cd0 + k_polare * CL(i_descent_diversion)^2;

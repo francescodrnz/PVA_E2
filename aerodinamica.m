@@ -5,7 +5,7 @@ k_polare = 1/(pi*AR_des*oswald);
 % Cd0
 Reynolds_1metro = V_cruise/(visc_dinamica_cruise/rho_cruise);
 % ala
-cF_ala = 0.455/(log10(Reynolds_1metro*standard_mean_chord_ala)^2.58+(1+0.144*M_des)^0.65); % coefficiente d'attrito equivalente
+cF_ala = 0.455/(log10(Reynolds_1metro*MAC)^2.58+(1+0.144*M_des)^0.65); % coefficiente d'attrito equivalente
 FF_ala = (1+0.6/0.5*t_c_des+100*t_c_des^4)*(1.34*M_des^0.18*cosd(sweep25_des)^0.28); % fattore di forma
 Q_ala = 1.0; % fattore di interferenza
 Swet_ala = S_ref*(1.997+0.52*t_c_des); % superficie bagnata

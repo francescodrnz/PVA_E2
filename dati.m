@@ -17,6 +17,13 @@ sec2hr = 1 / hr2sec;
 hp2W = 745.7;
 W2hp = 1 / hp2W;
 
+% atmosfera
+quote = 0:1:(h_cruise+50);
+rho_atm = zeros(1, length(quote));
+for i = 1:length(quote)
+    [~, ~, ~, rho_atm(i)] = atmosisa(quote(i));
+end
+
 % Dati
 AR_des = 10;
 t_c_des = 0.18;

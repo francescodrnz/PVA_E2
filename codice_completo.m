@@ -1,4 +1,3 @@
-tic
 clearvars;close all;clc;requisiti;dati;fusoliera;
 
 % ciclo principale
@@ -29,7 +28,7 @@ preallocazione;
 
 f = waitbar(0,'Please wait...');
 indice_config = 1;
-tot_config = length(W_S_vect)*length(Hp_vect)*length(phi_ice_cl_vect)*length(phi_ice_cr_vect)*length(phi_ice_de_vect);
+start_time = tic;
 % ciclo di dimensionamento
 for i_W_S = 1:length(W_S_vect)
     for i_Hp = 1:length(Hp_vect)
@@ -51,7 +50,8 @@ for i_W_S = 1:length(W_S_vect)
                         % definisco variabili derivate che si aggiornano
                         S_ref = WTO_curr / W_S_des; % [m^2]
                         b_ref = sqrt(AR_des*S_ref);  % [m]
-                        standard_mean_chord_ala = b_ref/AR_des; % [m]
+                        c_root = S_ref/((b_ref-diametro_esterno_fus)/2*(1+lambda_des)); % [m]
+                        MAC = 2/3 * c_root * (1+lambda_des+lambda_des^2) / (1+lambda_des); % [m]
                         CL_des = 2*W_S_des*g/(rho_cruise*V_cruise^2); % [] CL di crociera
 
                         % MATCHING CHART
@@ -67,7 +67,7 @@ for i_W_S = 1:length(W_S_vect)
                         % PESI
                         pesi_script;
 
-                        %stabilita;
+                        stabilita;
 
                         % aggiornamento WTO
                         WTO_precedente = WTO_curr;
@@ -76,6 +76,9 @@ for i_W_S = 1:length(W_S_vect)
                         delta_WTO = WTO_curr - WTO_precedente;
                         iterazioni = iterazioni + 1;
                     end
+                    if iterazioni == 100
+                        fprintf('Configurazione scartata per mancata convergenza: W_S=%f, Hp=%f\n', W_S_des, Hp_des);
+                    end
 
                     if all(phi_em <= 1) && all(phi_em >= 0) && b_ref <= 36
                         % Memorizzazione dei risultati dopo la convergenza
@@ -83,13 +86,17 @@ for i_W_S = 1:length(W_S_vect)
                         W_S_des_memo(indice_contatore) = W_S_des;
                         W_S_max_memo(indice_contatore) = W_S_max;
                         WTO_memo(indice_contatore) = WTO_curr;
+                        S_ref_memo(indice_contatore) = S_ref;
+                        b_ref_memo(indice_contatore) = b_ref;
+                        croot_memo(indice_contatore) = c_root;
+                        S_vert_memo(indice_contatore) = S_vert;
+                        S_orizz_memo(indice_contatore) = S_orizz;
                         CL_des_memo(indice_contatore) = CL_des;
                         E_curr_memo(indice_contatore) = E_curr;
                         P_curr_memo(indice_contatore) = P_curr;
                         P_tot_memo(indice_contatore) = P_tot;
                         P_ice_memo(indice_contatore) = P_ice;
                         P_em_memo(indice_contatore) = P_em;
-                        S_ref_memo(indice_contatore) = S_ref;
                         OEW_memo(indice_contatore) = OEW_curr;
                         W_wing_memo(indice_contatore) = W_wing;
                         W_fus_memo(indice_contatore) = W_fus;
@@ -118,20 +125,35 @@ for i_W_S = 1:length(W_S_vect)
                         ADP_memo(indice_contatore) = function_ADP(V_cruise,OEW_curr,2,2.451e-14*D(i_cruise)^3-2.846e-9*D(i_cruise)^2+1.838e-4*D(i_cruise)+0.6321);
 
                     end
-                    waitbar(indice_config/tot_config,f,'in progress')
+                    % waitbar
+                    if mod(indice_config, 3) == 0
+                        elapsed_time = toc(start_time);
+                        est_total_time = elapsed_time / indice_config * num_configurazioni;
+                        time_left = est_total_time - elapsed_time;
+                        waitbar(indice_config / num_configurazioni, f, ...
+                            sprintf('Progress: %.1f%% - Time left: %.2f sec', (indice_config / num_configurazioni) * 100, time_left));
+                    end
                     indice_config = indice_config + 1;
                 end
             end
         end
     end
 end
-toc
+close(f);
+msg = sprintf('Tutte le configurazioni sono state elaborate con successo!\nTempo totale trascorso: %.2f secondi.', elapsed_time);
+msgbox(msg, 'Calcolo completato');
+
 
 % salvataggio configurazioni
 data = struct( ...
     'W_S', W_S_des_memo(1:indice_contatore), ...
     'W_S_max', W_S_max_memo(1:indice_contatore), ...
     'WTO', WTO_memo(1:indice_contatore), ...
+    'S', S_ref_memo(1:indice_contatore), ...
+    'b', b_ref_memo(1:indice_contatore), ...
+    'c_root', croot_memo(1:indice_contatore), ...
+    'S_vert', S_vert_memo(1:indice_contatore), ...
+    'S_orizz', S_orizz_memo(1:indice_contatore), ...
     'CL_crociera', CL_des_memo(1:indice_contatore), ...
     'E_crociera', E_curr_memo(1:indice_contatore), ...
     'P_curr', P_curr_memo(1:indice_contatore), ...
@@ -143,7 +165,6 @@ data = struct( ...
     'phi_ice_de', phi_ice_de_memo(1:indice_contatore), ...
     'Hp', Hp_memo(1:indice_contatore), ...
     'E_batt_inst', E_batt_memo(1:indice_contatore), ...
-    'S', S_ref_memo(1:indice_contatore), ...
     'OEW', OEW_memo(1:indice_contatore), ...
     'W_wing', W_wing_memo(1:indice_contatore), ...
     'W_fus', W_fus_memo(1:indice_contatore), ...

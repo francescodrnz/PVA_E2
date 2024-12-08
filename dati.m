@@ -35,7 +35,7 @@ V_cruise_diversion = M_cruise_diversion * a_cruise_diversion; % [m/s]
 
 
 % Matching chart
-Vstall = 180; % [km/h]
+Vstall = 170; % [km/h]
 g = 9.81; % [m/s^2]
 b10 = 0.2792;
 b11 = -0.03285;

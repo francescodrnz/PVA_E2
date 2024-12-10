@@ -2,7 +2,7 @@ clearvars;close all;clc;requisiti;dati;fusoliera;
 
 % ciclo principale
 % definisco vettori delle variabili di design
-W_S_vect = [250 300 350]; % [kg/m^2]
+W_S_vect = [250 300 350 400]; % [kg/m^2]
 phi_ice_cl_vect = [0.1 0.3 0.5];
 phi_ice_cr_vect = [0.1 0.2 0.3 0.4 0.5];
 phi_ice_de_vect = [0.1 0.3];
@@ -58,11 +58,13 @@ for i_W_S = 1:length(W_S_vect)
                         % MATCHING CHART
                         matching_chart_script;
                         P_curr = P_W_des * WTO_curr; % [W] output del matching chart
+                        v_rotate = IAS2TAS(IAS_climb, 0);
+                        T_max = P_curr / (2*g*v_rotate(2)); % [kg]
                         % AERODINAMICA
                         aerodinamica;
 
                         % PRESTAZIONI
-                        E_curr = CL_des/CD_curr; % CD_curr da aerodinamica cd0+cdi+cdw
+                        E_curr = CL_des/CD_curr;
                         prestazioni;
 
                         % PESI
@@ -77,6 +79,7 @@ for i_W_S = 1:length(W_S_vect)
                         delta_WTO = WTO_curr - WTO_precedente;
                         iterazioni = iterazioni + 1;
                     end
+                    costi;
                     if iterazioni == iterazioni_max
                         fprintf('Mancata convergenza: W_S=%.1f, Hp=%.1f, phi_cl=%.1f, phi_cr=%.1f, phi_de=%.1f\n',...
                             W_S_des, Hp_des, phi_ice_cl, phi_ice_cr, phi_ice_de);

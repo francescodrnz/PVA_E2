@@ -42,6 +42,10 @@ phi_ice_de_memo = NaN(num_configurazioni, 1);
 Hp_memo = NaN(num_configurazioni, 1);
 E_batt_memo = NaN(num_configurazioni, 1);
 ADP_memo = NaN(num_configurazioni, 1);
+flight_cost_memo = NaN(num_configurazioni, 1);
+electricity_cost_memo = NaN(num_configurazioni, 1);
+maintenance_cost_memo = NaN(num_configurazioni, 1);
+CO2_memo = NaN(num_configurazioni, 1);
 
 AR_memo = NaN(num_configurazioni, 1);
 t_c_memo = NaN(num_configurazioni, 1);

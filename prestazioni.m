@@ -182,6 +182,7 @@ while (time(i_taxi_in + 1) - time(i_descent)) < taxi_time
 end
 
 W_block_fuel = (W(1) - W(i_taxi_in + 1));
+block_time = time(i_taxi_in + 1)*sec2hr; % [h]
 
 %% diversione
 % climb: constant IAS and ROC

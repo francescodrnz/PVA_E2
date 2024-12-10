@@ -40,5 +40,9 @@ if all(phi_em <= 1) && all(phi_em >= 0) && b_ref <= 36
     Hp_memo(indice_contatore) = Hp_des;
     W_batt_memo(indice_contatore) = W_batt;
     E_batt_memo(indice_contatore) = E_batt_inst;
-    ADP_memo(indice_contatore) = function_ADP(V_cruise,OEW_curr,2,2.451e-14*D(i_cruise)^3-2.846e-9*D(i_cruise)^2+1.838e-4*D(i_cruise)+0.6321);
+    ADP_memo(indice_contatore) = ADP;
+    flight_cost_memo(indice_contatore) = flight_cost;
+    electricity_cost_memo(indice_contatore) = electricity_cost;
+    maintenance_cost_memo(indice_contatore) = maintenance_cost;
+    CO2_memo(indice_contatore) = CO2_emissions;
 end

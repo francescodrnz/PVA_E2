@@ -2,7 +2,7 @@ clearvars;close all;clc;requisiti;dati;fusoliera;
 
 % ciclo principale
 % definisco vettori delle variabili di design
-W_S_vect = [250 300 350 400]; % [kg/m^2]
+W_S_vect = [250 300 350]; % [kg/m^2]
 phi_ice_cl_vect = [0.1 0.3 0.5];
 phi_ice_cr_vect = [0.1 0.2 0.3 0.4 0.5];
 phi_ice_de_vect = [0.1 0.3];

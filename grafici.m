@@ -1,23 +1,25 @@
-close all;clc;
+close all;clc;clearvars;
+data = loadMostRecentCSV();
+W_S_vect = unique(data.W_S);
 
 % potenza installata = f(block fuel)
 figure;
 hold on;
 
-cmap = [1 1 0; 0 1 0; 0 0 1; 1 0 0]; % colori
+cmap = lines(length(W_S_vect)); % colori
 
 for i = 1:length(W_S_vect)
-    idx = W_S_des_memo == W_S_vect(i);
+    idx = data.W_S == W_S_vect(i);
     
     % Scatter plot
-    scatter(W_block_fuel_memo(idx), P_tot_memo(idx), 50, cmap(i, :), 'filled', ...
+    scatter(data.W_block_fuel(idx), data.P_tot(idx), 50, cmap(i, :), 'filled', ...
         'DisplayName', sprintf('W_S = %d', W_S_vect(i)));
     
     % Verifica che ci siano abbastanza dati per la regressione
     if sum(idx) > 1 % Assicurati di avere più di un dato per fare la regressione
         % Calcolo della linea di tendenza
-        coeffs = polyfit(W_block_fuel_memo(idx), P_tot_memo(idx), 1); % Regressione lineare
-        block_fuel_fit = linspace(min(W_block_fuel_memo(idx)), max(W_block_fuel_memo(idx)), 100);
+        coeffs = polyfit(data.W_block_fuel(idx), data.P_tot(idx), 1); % Regressione lineare
+        block_fuel_fit = linspace(min(data.W_block_fuel(idx)), max(data.W_block_fuel(idx)), 100);
         P_tot_fit = polyval(coeffs, block_fuel_fit);
         
         % Disegna la linea di tendenza (tratteggiata)
@@ -38,15 +40,15 @@ figure;
 hold on;
 
 for i = 1:length(W_S_vect)
-    idx = (W_S_des_memo == W_S_vect(i)); % Trova i dati per W_S specifico
+    idx = (data.W_S == W_S_vect(i)); % Trova i dati per W_S specifico
     if any(idx) % Controlla se ci sono dati validi per questo W_S
         % Scatter plot
-        scatter(WTO_memo(idx), W_block_fuel_memo(idx), 50, cmap(i, :), 'filled', ...
+        scatter(data.WTO(idx), data.W_block_fuel(idx), 50, cmap(i, :), 'filled', ...
             'DisplayName', sprintf('W_S = %d', W_S_vect(i)));
         
         % Calcolo della linea di tendenza
-        coeffs = polyfit(WTO_memo(idx), W_block_fuel_memo(idx), 1); % Regressione lineare
-        WTO_fit = linspace(min(WTO_memo(idx)), max(WTO_memo(idx)), 100);
+        coeffs = polyfit(data.WTO(idx), data.W_block_fuel(idx), 1); % Regressione lineare
+        WTO_fit = linspace(min(data.WTO(idx)), max(data.WTO(idx)), 100);
         block_fuel_fit = polyval(coeffs, WTO_fit);
         
         % Disegna la linea di tendenza
@@ -69,17 +71,17 @@ figure;
 hold on;
 
 for i = 1:length(W_S_vect)
-    idx = W_S_des_memo == W_S_vect(i);
+    idx = data.W_S == W_S_vect(i);
     
     % Scatter plot Block Fuel vs Peso delle Batterie
-    scatter(W_batt_memo(idx), W_block_fuel_memo(idx), 50, cmap(i, :), 'filled', ...
+    scatter(data.W_battery(idx), data.W_block_fuel(idx), 50, cmap(i, :), 'filled', ...
         'DisplayName', sprintf('W_S = %d', W_S_vect(i)));
     
     % Verifica che ci siano abbastanza dati per la regressione
     if sum(idx) > 1
         % Calcolo della linea di tendenza
-        coeffs = polyfit(W_batt_memo(idx), W_block_fuel_memo(idx), 1); % Regressione lineare
-        W_batt_fit = linspace(min(W_batt_memo(idx)), max(W_batt_memo(idx)), 100);
+        coeffs = polyfit(data.W_battery(idx), data.W_block_fuel(idx), 1); % Regressione lineare
+        W_batt_fit = linspace(min(data.W_battery(idx)), max(data.W_battery(idx)), 100);
         W_block_fuel_fit = polyval(coeffs, W_batt_fit);
         
         % Disegna la linea di tendenza (tratteggiata)

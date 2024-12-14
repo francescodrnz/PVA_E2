@@ -1,6 +1,6 @@
 % flight cost
 crew_cost = (2*315 + ceil(passeggeri / 50)*77) * inflazione; % [$/h]
-fuel_cost = jet_fuel_cost * W_fuel*1e-3 / block_time; % [$/h]
+fuel_cost = jet_fuel_cost * W_block_fuel*1e-3 / block_time; % [$/h]
 electricity_cost = 0.5 * E_batt_inst*1e-3; % [$/mission]
 
 tassa_atterraggio = 7 * WTO_curr*1e-3 / block_time;

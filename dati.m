@@ -64,12 +64,6 @@ ROD_diversion = ROD_diversion * ftpmin2mps; % [m/s]
 IAS_climb_diversion = IAS_climb_diversion * kt2mps; % [m/s]
 IAS_descent_diversion = IAS_descent_diversion * kt2mps; % [m/s]
 
-% aerodinamica
-AR_orizz = 6;
-S_orizz_livello0 = 6; % [m^2]
-AR_vert = 1.6;
-S_vert_livello0 = 5; % [m^2]
-
 % prestazioni
 kc = 0.2675*1e-3; % [kg/(W*h)]
 taxi_time = 240; % [s]
@@ -87,8 +81,16 @@ max_fuel_volume = 5000; % [l]
 peso_passeggero = 93; % [kg]
 
 % stabilita
-V_H_livello0 = 0.9;
+V_H_livello0 = 0.8;
 V_V_livello0 = 0.08;
+AR_orizz = 6;
+S_orizz_livello0 = 6; % [m^2]
+t_c_orizz = 0.1;
+sweep25_orizz = 29; % [°]
+AR_vert = 1.6;
+S_vert_livello0 = 5; % [m^2]
+t_c_vert = 0.12;
+sweep25_vert = 34; % [°]
 
 % costi
 jet_fuel_cost = 686.33; % [$/(kg*10^3)]

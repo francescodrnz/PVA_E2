@@ -121,7 +121,7 @@ for param_idx = 1:length(parametri)
     end
     phi_ice_labels{end} = phi_ice_labels{1}; % Repeat first label to close the polygon
 
-    set(ax, 'ThetaTick', rad2deg(theta(valid_indices)))
+    set(ax, 'ThetaTick', rad2deg(theta))
     set(ax, 'ThetaTickLabel', phi_ice_labels(valid_indices));
 
     title(ax, titoli_personalizzati{param_idx});
@@ -130,4 +130,9 @@ for param_idx = 1:length(parametri)
     legend(ax, legend_labels(~cellfun('isempty', legend_labels)), 'Location', 'best');
 
     hold(ax, 'off');
+
+    figure;
+    plot_values = plot_values(:, 1:length(valid_indices));
+    heatmap(phi_ice_labels(valid_indices)', legend_labels(~cellfun('isempty', legend_labels))', param_values(:, valid_indices));
+    title(titoli_personalizzati{param_idx});
 end

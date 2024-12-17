@@ -18,7 +18,7 @@ a2 = b20 + b21*CL_max_flapped + b22*CL_max_flapped^2;
 P_W_decollo = a1*W_S_des + a2*W_S_des^2; % [W/kg]
 
 % Climb
-C_D_flap = 0.9 * (1/4.1935)^1.38 * Sflap/S_ref * sind(15)^2; % check: cflap/c
+C_D_flap = 0.9 * (0.26)^1.38 * Sflap/S_ref * sind(15)^2; %
 C_D_LG = 2.92e-03*(WTO_curr*kg2lb)^0.785/(S_ref*sqm2sqft);
 % first segment
 gamma1 = atan(0/100);
@@ -63,7 +63,7 @@ P_W_AppClimb = 1 / (kOEI * etaP) * ...
 % Cruise
 P_W_cruise = ((0.5*rho_cruise*(V_cruise*kmph2mps)^3) / (etaPCruise*W_S_des)) * ...
     (Cd0 + k_polare * (2*W_S_des*g/(rho_cruise*(V_cruise*kmph2mps)^2))^2); % [W/kg]
-P_W_cruise = P_W_cruise/(rho_SL/rho_cruise);%(rho_cruise/rho_SL)^0.75; % riferisco il matching chart al SL % anche in E1 ^0.75?
+P_W_cruise = P_W_cruise/(rho_SL/rho_cruise);% riferisco il matching chart al SL
 
 
 % design point

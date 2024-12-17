@@ -30,6 +30,12 @@ for i_W_S = 1:length(W_S_vect)
     end
 end
 
+% Trova le righe vuote (tutti gli elementi della riga sono zero)
+rows_to_remove = all(values_mean_all == 0, 2);
+
+% Rimuovi le righe vuote
+values_mean_all = values_mean_all(~rows_to_remove, :);
+
 % Normalizzazione
 
 % Creare una matrice per i valori normalizzati
@@ -38,8 +44,9 @@ values_normalized = zeros(size(values_mean_all));  % Matrice per i valori normal
 % Normalizzare i valori medi per ogni parametro (colonna)
 for i = 1:size(values_mean_all, 2)  % Per ogni parametro (colonna)
     max_val = max(values_mean_all(:, i));  % Troviamo il massimo di ogni colonna
+    min_val = min(values_mean_all(:, i));  % Troviamo il massimo di ogni colonna
     if max_val ~= 0  % Evitare divisione per zero
-        values_normalized(:, i) = values_mean_all(:, i) / max_val;  % Normalizziamo dividendo per il massimo
+        values_normalized(:, i) = (values_mean_all(:, i) - min_val) / (max_val - min_val);  % Normalizziamo dividendo per il massimo
     else
         values_normalized(:, i) = values_mean_all(:, i);  % Se il massimo è zero, non fare nulla
     end
@@ -63,6 +70,7 @@ cmap = lines(length(W_S_vect) * length(Hp_vect));  % Usa la colormap 'lines' per
 
 % Variabile per memorizzare gli handle delle curve per la legenda
 legend_handles = [];
+WSHp_vect = string([]);
 
 % Iterazione sui valori di W_S e Hp per tracciare le curve
 index = 1;
@@ -73,8 +81,12 @@ for i_W_S = 1:length(W_S_vect)
 
         if ~isempty(idx) % Se ci sono configurazioni per questa combinazione
             % Aggiungere la curva per questa combinazione di W_S e Hp
-            h = polarplot(ax, theta, values_normalized(index, :), '-o', 'LineWidth', 2, ...
-                'Color', cmap(index, :), 'DisplayName', sprintf('W_S = %.1f, Hp = %.1f', W_S_vect(i_W_S), Hp_vect(i_Hp)));
+            h = polarplot(ax, theta, values_normalized(index, :), 'o', ... % Solo marcatori
+                'LineWidth', 2, ...
+                'MarkerSize', 6, ...
+                'Color', cmap(index, :), ...
+                'DisplayName', sprintf('W_S = %.1f, Hp = %.1f', W_S_vect(i_W_S), Hp_vect(i_Hp)));
+            WSHp_vect = [WSHp_vect, sprintf('W_S = %.1f, Hp = %.1f', W_S_vect(i_W_S), Hp_vect(i_Hp))];            
             legend_handles = [legend_handles, h]; % Aggiungi l'handle alla legenda
             index = index + 1;
         end
@@ -88,4 +100,11 @@ title(ax, 'Confronto delle configurazioni di design');
 % Legenda, solo per le curve effettivamente disegnate
 legend(legend_handles, 'Location', 'Best');
 
-hold off;
+% Creazione della heatmap
+if size(values_normalized, 2) > length(labels)
+    values_normalized = values_normalized(:, 1:length(labels));
+end
+figure;
+heatmap(labels, WSHp_vect, values_normalized, ...
+    'Colormap', parula, 'ColorbarVisible', 'on', 'Title', 'Heatmap dei valori normalizzati', ...
+    'XLabel', 'Parametri', 'YLabel', 'Combinazioni W_S e Hp');

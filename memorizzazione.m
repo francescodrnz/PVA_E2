@@ -16,6 +16,9 @@ if all(phi_em <= 1) && all(phi_em >= 0) && b_ref <= 36
     P_ice_memo(indice_contatore) = P_ice;
     P_em_memo(indice_contatore) = P_em;
     OEW_memo(indice_contatore) = OEW_curr;
+    CD_memo(indice_contatore) = CD_curr;
+    CD0_memo(indice_contatore) = Cd0;
+    CDi_memo(indice_contatore) = Cdi;
     W_wing_memo(indice_contatore) = W_wing;
     W_fus_memo(indice_contatore) = W_fus;
     W_tail_memo(indice_contatore) = W_tail;

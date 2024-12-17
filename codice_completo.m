@@ -64,13 +64,13 @@ for i_W_S = 1:length(W_S_vect)
                         aerodinamica;
 
                         % PRESTAZIONI
-                        E_curr = CL_des/CD_curr;
+                        E_curr = CL_des/CD_curr; % efficienza in crociera
                         prestazioni;
 
                         % PESI
                         pesi_script;
 
-                        stabilita;
+                        %stabilita;
 
                         % aggiornamento WTO
                         WTO_precedente = WTO_curr;

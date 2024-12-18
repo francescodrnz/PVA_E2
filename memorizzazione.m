@@ -48,4 +48,6 @@ if all(phi_em <= 1) && all(phi_em >= 0) && b_ref <= 36
     electricity_cost_memo(indice_contatore) = electricity_cost;
     maintenance_cost_memo(indice_contatore) = maintenance_cost;
     CO2_memo(indice_contatore) = CO2_emissions;
+    DOC_memo(indice_contatore) = DOC;
+    PREE_memo(indice_contatore) = PREE;
 end

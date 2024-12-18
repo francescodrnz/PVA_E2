@@ -49,6 +49,8 @@ flight_cost_memo = NaN(num_configurazioni, 1);
 electricity_cost_memo = NaN(num_configurazioni, 1);
 maintenance_cost_memo = NaN(num_configurazioni, 1);
 CO2_memo = NaN(num_configurazioni, 1);
+DOC_memo = NaN(num_configurazioni, 1);
+PREE_memo = NaN(num_configurazioni, 1);
 
 AR_memo = NaN(num_configurazioni, 1);
 t_c_memo = NaN(num_configurazioni, 1);

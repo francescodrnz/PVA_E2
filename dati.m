@@ -97,3 +97,4 @@ K_engine = 0.57;
 OPR = 32;
 BPR = 50;
 N_comp = 12;
+FED = 12000; % fuel energy density [Wh/kg]

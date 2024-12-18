@@ -81,14 +81,12 @@ max_fuel_volume = 5000; % [l]
 peso_passeggero = 93; % [kg]
 
 % stabilita
-V_H_livello0 = 0.8;
+V_H_livello0 = 0.9;
 V_V_livello0 = 0.08;
 AR_orizz = 6;
-S_orizz_livello0 = 6; % [m^2]
 t_c_orizz = 0.1;
 sweep25_orizz = 29; % [°]
 AR_vert = 1.6;
-S_vert_livello0 = 5; % [m^2]
 t_c_vert = 0.12;
 sweep25_vert = 34; % [°]
 

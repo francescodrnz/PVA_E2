@@ -1,15 +1,18 @@
+clc
 % Parametri di intervallo (fattori moltiplicativi)
-x_CG_fus_factor_max = [0.42, 0.52]; % intervallo per il fattore di x_CG_fus
-x_LE_wing_factor_max = [0.42, 0.52]; % intervallo per il fattore di x_LE_wing
-x_CG_tail_factor_max = [0.90, 0.96]; % intervallo per il fattore di x_CG_tail
+x_CG_fus_factor_range = [0.42, 0.52]; % intervallo per il fattore di x_CG_fus
+x_LE_wing_factor_range = [0.42, 0.52]; % intervallo per il fattore di x_LE_wing
+x_CG_tail_factor_range = [0.90, 0.96]; % intervallo per il fattore di x_CG_tail
 step_x = 0.01;
+V_H = V_H_livello0;
+V_V = V_V_livello0;
 V_H_max = 1.35; % intervallo per V_H
 V_V_max = 0.14; % intervallo per V_V
 
 % Fattori moltiplicativi iniziali
-x_CG_fus_factor = 0.42; % inizialmente il fattore di x_CG_fus
-x_LE_wing_factor = 0.42; % inizialmente il fattore di x_LE_wing
-x_CG_tail_factor = 0.90; % inizialmente il fattore di x_CG_tail
+x_CG_fus_factor = 0.45; % inizialmente il fattore di x_CG_fus
+x_LE_wing_factor = 0.45; % inizialmente il fattore di x_LE_wing
+x_CG_tail_factor = 0.92; % inizialmente il fattore di x_CG_tail
 
 % Stime delle masse
 m_fus = OEW_curr + W_payload - W_wing - W_tail - W_propulsione; % kg
@@ -29,7 +32,7 @@ step_H = 0.05; % passo di incremento per V_H
 step_V = 0.005; % passo di incremento per V_V
 
 while iteration < max_iterations
-    % Verifica delle condizioni di stabilità
+    % Verifica delle condizioni di stabilità @MTOW
     x_CG_aircraft_MTOW = (x_CG_fus_factor * lunghezza_fus * m_fus + x_CG_wing * (W_wing + W_fuel) + x_CG_eng * W_propulsione + ...
         x_CG_tail_factor * lunghezza_fus * W_tail) / (WTO_curr);
     tail_arm_MTOW = (x_CG_tail_factor * lunghezza_fus) - x_CG_aircraft_MTOW;
@@ -55,9 +58,9 @@ while iteration < max_iterations
 
     % Se V_H o V_V sono fuori dal loro range, modifica i fattori moltiplicativi
     if V_V == V_V_max && V_H == V_H_max
-        x_CG_fus_factor = min(x_CG_fus_factor_max, x_CG_fus_factor + step_x);
-        x_LE_wing_factor = min(x_LE_wing_factor_max, x_LE_wing_factor + step_x);
-        x_CG_tail_factor = min(x_CG_tail_factor_max, x_CG_tail_factor + step_x);
+        x_CG_fus_factor = min(x_CG_fus_factor_range, x_CG_fus_factor + step_x);
+        x_LE_wing_factor = min(x_LE_wing_factor_range, x_LE_wing_factor + step_x);
+        x_CG_tail_factor = min(x_CG_tail_factor_range, x_CG_tail_factor + step_x);
     end
 
     % Ricalcola i nuovi valori di superficie orizzontale e verticale
@@ -72,4 +75,16 @@ end
 % Verifica finale per evitare loop infiniti
 if iteration == max_iterations
     disp('Attenzione: numero massimo di iterazioni raggiunto.');
+else
+    fprintf(['Configurazione stabile:\n' ...
+         'x_CG_fus = %.2f\n' ...
+         'x_LE_wing = %.2f\n' ...
+         'x_CG_tail = %.2f\n' ...
+         'V_V = %.2f\n' ...
+         'V_H = %.2f\n' ...
+         'V_V_MTOW = %.2f\n' ...
+         'V_H_MTOW = %.2f\n' ...
+         'S_orizz = %.2f\n' ...
+         'S_vert = %.2f\n'], ...
+         x_CG_fus_factor, x_LE_wing_factor, x_CG_tail_factor, V_V, V_H, V_V_MTOW, V_H_MTOW, S_orizz, S_vert);
 end

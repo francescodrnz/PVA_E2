@@ -1,20 +1,20 @@
 clearvars;close all;clc;requisiti;dati;fusoliera;
 
-% ciclo principale
-% definisco vettori delle variabili di design
-W_S_vect = [250 300 350]; % [kg/m^2]
-phi_ice_cl_vect = [0.1 0.3 0.5];
-phi_ice_cr_vect = [0.1 0.2 0.3 0.4 0.5];
-phi_ice_de_vect = [0.1 0.3];
-Hp_vect = [0.1 0.2 0.3 0.4]; % fattore di ibridizzazione
+% variabili di design
+% W_S_vect = [250 300 350]; % [kg/m^2]
+% phi_ice_cl_vect = [0.1 0.3 0.5];
+% phi_ice_cr_vect = [0.1 0.2 0.3 0.4 0.5];
+% phi_ice_de_vect = [0.1 0.3];
+% Hp_vect = [0.1 0.2 0.3 0.4]; % fattore di ibridizzazione
+W_S_vect = [300]; % [kg/m^2]
+phi_ice_cl_vect = [0.3];
+phi_ice_cr_vect = [0.1];
+phi_ice_de_vect = [0.3];
+Hp_vect = [0.4]; % fattore di ibridizzazione
 
 % inizializzazione valori del ciclo
 Cd0 = Cd0_livello0;
 k_polare = k_polare_livello0;
-V_H = V_H_livello0;
-V_V = V_V_livello0;
-S_orizz = S_orizz_livello0;
-S_vert = S_vert_livello0;
 
 % inizializzazione ciclo
 W_inizializzazione = 10000; % [kg] stima preliminare a caso
@@ -50,6 +50,8 @@ for i_W_S = 1:length(W_S_vect)
                     while abs(delta_WTO) > tolleranza && iterazioni < iterazioni_max
                         % definisco variabili derivate che si aggiornano
                         S_ref = WTO_curr / W_S_des; % [m^2]
+                        S_orizz = 0.3*S_ref;
+                        S_vert = 0.2*S_ref;
                         b_ref = sqrt(AR_des*S_ref);  % [m]
                         c_root = S_ref/((b_ref-diametro_esterno_fus)/2*(1+lambda_des)); % [m]
                         MAC = 2/3 * c_root * (1+lambda_des+lambda_des^2) / (1+lambda_des); % [m]
@@ -69,8 +71,6 @@ for i_W_S = 1:length(W_S_vect)
 
                         % PESI
                         pesi_script;
-
-                        %stabilita;
 
                         % aggiornamento WTO
                         WTO_precedente = WTO_curr;
@@ -101,7 +101,7 @@ for i_W_S = 1:length(W_S_vect)
     end
 end
 close(f);
-msg = sprintf('Tutte le configurazioni sono state elaborate con successo!\nTempo totale trascorso: %.2f secondi.', elapsed_time);
+msg = sprintf('Tutte le configurazioni sono state elaborate con successo!\nTempo totale trascorso: %.2f secondi.', toc(start_time));
 msgbox(msg, 'Calcolo completato');
 
 

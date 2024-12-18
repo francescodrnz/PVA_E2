@@ -5,7 +5,7 @@ clearvars;
 data = loadMostRecentCSV();
 
 % Parameters to visualize
-parametri = {'WTO', 'OEW', 'E_crociera', 'W_battery', 'W_block_fuel', 'P_tot', 'ADP', 'flight_cost', 'maintenance_cost'};
+parametri = {'WTO', 'OEW', 'E_crociera', 'W_battery', 'W_block_fuel', 'P_tot', 'PREE'};
 % Titoli personalizzati per i grafici
 titoli_personalizzati = {
     'Peso totale al decollo (WTO)', ...
@@ -14,9 +14,7 @@ titoli_personalizzati = {
     'Peso delle batterie (W_{battery})', ...
     'Peso del carburante blocco (W_{block\_fuel})', ...
     'Potenza totale (P_{tot})', ...
-    'ADP', ...
-    'Costo del volo (flight\_cost)', ...
-    'Costo di manutenzione (maintenance\_cost)'
+    'Payload Range Efficiency'
     };
 
 % Find unique combinations of W_S and Hp
@@ -70,48 +68,89 @@ for param_idx = 1:length(parametri)
     %     param_values_normalized = zeros(size(param_values));
     % end
 
-    % Create radar chart
+    % Combinazione da evidenziare
+    highlight_ws = 300;
+    highlight_hp = 0.4;
+    highlight_phi_ice = [0.3, 0.1, 0.3];
+
+    % Trova indice della combinazione da evidenziare
+    highlight_idx = find(...
+        WS_Hp_combinations(:, 1) == highlight_ws & ...
+        WS_Hp_combinations(:, 2) == highlight_hp);
+
+    highlight_phi_idx = find(...
+        phi_ice_combinations(:, 1) == highlight_phi_ice(1) & ...
+        phi_ice_combinations(:, 2) == highlight_phi_ice(2) & ...
+        phi_ice_combinations(:, 3) == highlight_phi_ice(3));
+
+    % Combinazione da evidenziare
+    highlight_ws = 300;
+    highlight_hp = 0.4;
+    highlight_phi_ice = [0.3, 0.1, 0.3];
+
+    % Trova indice della combinazione da evidenziare
+    highlight_idx = find(...
+        WS_Hp_combinations(:, 1) == highlight_ws & ...
+        WS_Hp_combinations(:, 2) == highlight_hp);
+
+    highlight_phi_idx = find(...
+        phi_ice_combinations(:, 1) == highlight_phi_ice(1) & ...
+        phi_ice_combinations(:, 2) == highlight_phi_ice(2) & ...
+        phi_ice_combinations(:, 3) == highlight_phi_ice(3));
+
+    % Crea radar chart
     figure;
     ax = polaraxes;
     hold(ax, 'on');
 
-    % Prepare theta values for plotting
+    % Prepara theta per i plot
     num_axes = size(phi_ice_combinations, 1);
     theta = linspace(0, 2*pi, num_axes + 1);
 
-    % Color map for W_S, Hp combinations
+    % Mappa colori per W_S e Hp
     cmap = lines(size(WS_Hp_combinations, 1));
 
-    % Legend labels
-    legend_labels = cell(size(WS_Hp_combinations, 1), 1);
+    % Legende
+    legend_labels = cell(size(WS_Hp_combinations, 1) + 1, 1);
 
-    % Plot each W_S, Hp combination
+    % Plot delle configurazioni W_S, Hp
     for ws_hp_idx = 1:size(WS_Hp_combinations, 1)
-        % Find non-NaN indices
         valid_indices = find(~isnan(param_values_normalized(ws_hp_idx, :)));
 
         if ~isempty(valid_indices)
-            % Prepare plot values for non-NaN points
             plot_theta = theta(valid_indices);
             plot_values = param_values_normalized(ws_hp_idx, valid_indices);
 
-            % Close the polygon by connecting first and last point
+            % Chiudi il poligono
             plot_theta = [plot_theta, plot_theta(1)];
             plot_values = [plot_values, plot_values(1)];
 
-            % Plot the configuration
+            % Traccia configurazione
             h = polarplot(ax, plot_theta, plot_values, '-o', ...
                 'LineWidth', 2, ...
                 'Color', cmap(ws_hp_idx, :), ...
                 'MarkerFaceColor', cmap(ws_hp_idx, :));
 
-            % Create legend label
+            % Aggiungi etichetta alla legenda
             legend_labels{ws_hp_idx} = sprintf('W_S=%.1f, Hp=%.1f', ...
                 WS_Hp_combinations(ws_hp_idx, 1), WS_Hp_combinations(ws_hp_idx, 2));
         end
     end
 
-    % Set axis labels to phi_ice combinations
+    % Evidenziazione del punto specifico
+    if ~isempty(highlight_idx) && ~isempty(highlight_phi_idx)
+        highlight_theta = theta(highlight_phi_idx);
+        highlight_value = param_values_normalized(highlight_idx, highlight_phi_idx);
+
+        % Aggiungi punto evidenziato
+        polarplot(ax, highlight_theta, highlight_value, 'ro', ...
+            'MarkerSize', 10, ...
+            'MarkerFaceColor', 'r', ...
+            'DisplayName', 'Configurazione scelta'); % Punto rosso con legenda
+        legend_labels{end} = 'Configurazione scelta'; % Aggiungi alla legenda
+    end
+
+    % Etichette per i phi_ice
     phi_ice_labels = cell(size(phi_ice_combinations, 1) + 1, 1);
     for i = 1:size(phi_ice_combinations, 1)
         phi_ice_labels{i} = sprintf('φ_{cl}:%.1f φ_{cr}:%.1f φ_{de}:%.1f', ...
@@ -119,20 +158,22 @@ for param_idx = 1:length(parametri)
             phi_ice_combinations(i, 2), ...
             phi_ice_combinations(i, 3));
     end
-    phi_ice_labels{end} = phi_ice_labels{1}; % Repeat first label to close the polygon
+    phi_ice_labels{end} = phi_ice_labels{1}; % Chiude il poligono
 
     set(ax, 'ThetaTick', rad2deg(theta))
     set(ax, 'ThetaTickLabel', phi_ice_labels(valid_indices));
 
     title(ax, titoli_personalizzati{param_idx});
 
-    % Add legend
+    % Aggiorna legenda con il nuovo elemento
     legend(ax, legend_labels(~cellfun('isempty', legend_labels)), 'Location', 'best');
 
     hold(ax, 'off');
 
-    figure;
-    plot_values = plot_values(:, 1:length(valid_indices));
-    heatmap(phi_ice_labels(valid_indices)', legend_labels(~cellfun('isempty', legend_labels))', param_values(:, valid_indices));
-    title(titoli_personalizzati{param_idx});
+
+
+    % figure;
+    % plot_values = plot_values(:, 1:length(valid_indices));
+    % heatmap(phi_ice_labels(valid_indices)', legend_labels(~cellfun('isempty', legend_labels))', param_values(:, valid_indices));
+    % title(titoli_personalizzati{param_idx});
 end

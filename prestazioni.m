@@ -6,7 +6,6 @@ P_ice = P_tot - P_em;
 dt = 5; % [s]
 % initial conditions
 W_start = WTO_curr; % [kg]
-x_start = 0; % [m]
 z_start = 0; % [m]
 % inizializzazione
 n_step = 2*ceil(taxi_time/dt) + ceil(takeoff_time/dt) + ceil(h_cruise/(ROC*dt)) + ceil(range_cruise*1e3/(V_cruise*dt)) + ceil(abs(h_cruise/(ROD*dt))) + ...
@@ -67,13 +66,15 @@ i_climb = i_take_off;
 P_ice_cl = phi_ice_cl * P_ice; % [W]
 
 z = z_start;
+x_climb = 0;
 
 while z < h_cruise
     i_climb = i_climb + 1;
-    rho = IntStandAir_SI(z, ['rho']);
+    rho = IntStandAir_SI(z, 'rho');
     conversione_IAS = IAS2TAS(IAS_climb, z);
     TAS = conversione_IAS(2);
     gamma_climb = atan(ROC/TAS);
+    x_climb = x_climb + TAS * cos(gamma_climb) * dt; % [m]
 
     CL(i_climb) = 2*(W(i_climb)*g/S_ref) / (rho*TAS^2);
     CD(i_climb) = Cd0 + k_polare * CL(i_climb)^2;
@@ -128,13 +129,15 @@ i_descent = i_cruise;
 P_ice_de = phi_ice_de * P_ice; % [W]
 
 z = h_cruise;
+x_descent = 0;
 
 while z > 0
     i_descent = i_descent + 1;
-    rho = IntStandAir_SI(z, ['rho']);
+    rho = IntStandAir_SI(z, 'rho');
     conversione_IAS = IAS2TAS(IAS_descent, z);
     TAS = conversione_IAS(2);
     gamma_descent = atan(ROD/TAS);
+    x_descent = x_descent + TAS * cos(gamma_descent) * dt; % [m]
 
     CL(i_descent) = 2*(W(i_descent)*g/S_ref) / (rho*TAS^2);
     CD(i_descent) = Cd0 + k_polare * CL(i_descent)^2;
@@ -192,7 +195,7 @@ z = z_start;
 
 while z < h_cruise_diversion
     i_climb_diversion = i_climb_diversion + 1;
-    rho = IntStandAir_SI(z, ['rho']);
+    rho = IntStandAir_SI(z, 'rho');
     conversione_IAS = IAS2TAS(IAS_climb_diversion, z);
     TAS = conversione_IAS(2);
     gamma_climb_diversion = atan(ROC_diversion/TAS);
@@ -252,7 +255,7 @@ z = h_cruise_diversion;
 
 while z > 0
     i_descent_diversion = i_descent_diversion + 1;
-    rho = IntStandAir_SI(z, ['rho']);
+    rho = IntStandAir_SI(z, 'rho');
     conversione_IAS = IAS2TAS(IAS_descent_diversion, z);
     TAS = conversione_IAS(2);
     gamma_descent_diversion = atan(ROD_diversion/TAS);
@@ -288,6 +291,10 @@ W_fuel = 1.05*(W(1) - W(i_descent_diversion + 1));
 fuel_fraction = W_fuel/WTO_curr;
 OEW_curr = WTO_curr - W_fuel;
 
+fuel_fraction_no_diversion = W_block_fuel/WTO_curr;
+W_fuel_diversion =  W(i_taxi_in + 1) - W(i_descent_diversion + 1);
+W_fuel_descent = W(i_cruise + 1) - W(i_descent + 1);
+W_fuel_climb = W(i_take_off + 1) - W(i_climb + 1);
 
 
 

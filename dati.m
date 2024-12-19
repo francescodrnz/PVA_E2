@@ -77,8 +77,11 @@ EMPD = 16*1e3; % [W/kg]
 K_nac = 0.14 * lb2kg / hp2W; % [kg/W]
 N_serbatoi = 2;
 ultimate_load_fact = 3.75;
-max_fuel_volume = 5000; % [l]
+max_fuel_volume = 1000; % [l]
 peso_passeggero = 93; % [kg]
+
+% payload-range chart
+fuel_density = 0.785; % [kg/l]
 
 % stabilita
 V_H_livello0 = 0.9;

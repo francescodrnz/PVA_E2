@@ -8,7 +8,7 @@ k_polare = k_polare_livello0;
 
 
 % CL clean
-CLmax_2D_clean = 1.5; % controllare
+CLmax_2D_clean = 1.5;
 CLmax_3D_clean = 0.9*CLmax_2D_clean*cosd(sweep25_des);
 
 % CL flapped
@@ -72,7 +72,7 @@ P_W_AppClimb = 1 / (kOEI * etaP) * ...
 % Cruise
 P_W_cruise = ((0.5*rho_cruise*V_cruise^3) ./ (etaPCruise*W_S)) .* ...
     (Cd0 + k_polare * (2*W_S*g/(rho_cruise*V_cruise^2)).^2); % [W/kg]
-P_W_cruise = P_W_cruise/(rho_cruise/rho_SL)^0.75; % riferisco il matching chart al SL % anche in E1 ^0.75?
+P_W_cruise = P_W_cruise/((rho_cruise/rho_SL)^0.75); % riferisco il matching chart al SL % anche in E1 ^0.75?
 
 
 figure;

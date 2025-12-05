@@ -185,7 +185,6 @@ while (time(i_taxi_in + 1) - time(i_descent)) < taxi_time
     W_dot(i_taxi_in) = - phi_ice_taxi * kc * P_ice;
     W(i_taxi_in + 1) = W(i_taxi_in) + W_dot(i_taxi_in) * dt; % [kg]
 
-    quota(i_taxi_in) = 0;
     time(i_taxi_in+1) = time(i_taxi_in) + dt;
 
 end
@@ -223,7 +222,6 @@ while z < h_cruise_diversion
     W_dot(i_climb_diversion) = - kc * P_nec(i_climb_diversion)/ hr2sec; % [kg/s]
     W(i_climb_diversion + 1) = W(i_climb_diversion) + W_dot(i_climb_diversion) * dt; % [kg]
 
-    quota(i_climb_diversion) = z;
     z = z + ROC_diversion * dt; % [m]
     time(i_climb_diversion + 1) = time(i_climb_diversion) + dt;
 
@@ -252,7 +250,6 @@ while x_cruise_diversion < range_cruise_diversion*1e3 % range in metri
     W(i_cruise_diversion + 1) = W(i_cruise_diversion) + W_dot(i_cruise_diversion) * dt; % [kg]
     x_cruise_diversion = x_cruise_diversion + V_cruise_diversion*dt;
 
-    quota(i_cruise_diversion) = h_cruise_diversion;
     time(i_cruise_diversion + 1) = time(i_cruise_diversion) + dt;
 end
 
@@ -331,7 +328,6 @@ while z > 0
     W(i_descent_diversion + 1) = W(i_descent_diversion) + W_dot(i_descent_diversion) * dt; % [kg]
 
     % Avanzamento tempo e quota
-    quota(i_descent_diversion) = z;
     z = z + delta_z; 
     time(i_descent_diversion + 1) = time(i_descent_diversion) + dt;
     
@@ -359,14 +355,14 @@ W_fuel_climb = W(i_take_off + 1) - W(i_climb + 1);
 
 
 % if all(phi_em <= 1)
-    % figure;
-    % hold on
-    % plot(time,W)
-    % xline(time(i_taxi_out + 1))
-    % xline(time(i_take_off + 1))
-    % xline(time(i_climb + 1))
-    % xline(time(i_cruise + 1))
-    % xline(time(i_descent + 1))
+%     figure;
+%     hold on
+%     plot(time,W)
+%     xline(time(i_taxi_out + 1))
+%     xline(time(i_take_off + 1))
+%     xline(time(i_climb + 1))
+%     xline(time(i_cruise + 1))
+%     xline(time(i_descent + 1))
 %     hold off
 %     figure;
 %     hold on

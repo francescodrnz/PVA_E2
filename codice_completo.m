@@ -1,16 +1,12 @@
 clearvars;close all;clc;requisiti;dati;fusoliera;
 
 % variabili di design
-% W_S_vect = [250 300 350]; % [kg/m^2]
-% phi_ice_cl_vect = [0.1 0.3 0.5];
-% phi_ice_cr_vect = [0.1 0.2 0.3 0.4 0.5];
-% phi_ice_de_vect = [0.1 0.3];
-% Hp_vect = [0.1 0.2 0.3 0.4]; % fattore di ibridizzazione
-W_S_vect = [300]; % [kg/m^2]
-phi_ice_cl_vect = [0.1];
-phi_ice_cr_vect = [0.1];
-phi_ice_de_vect = [0.1];
-Hp_vect = [0.4]; % fattore di ibridizzazione
+W_S_vect = [280 300 325 350]; % [kg/m^2]
+phi_ice_cl_vect = [0.1 0.3 0.5];
+phi_ice_cr_vect = [0.1 0.2 0.3 0.4 0.5];
+phi_ice_de_vect = [0.1 0.3];
+Hp_vect = [0.1 0.2 0.3 0.4]; % fattore di ibridizzazione
+% aereo_scelto;
 
 % inizializzazione valori del ciclo
 Cd0 = Cd0_livello0;

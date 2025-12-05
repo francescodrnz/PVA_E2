@@ -16,22 +16,24 @@ hr2sec = 3600;
 sec2hr = 1 / hr2sec;
 hp2W = 745.7;
 W2hp = 1 / hp2W;
+Wh2J = 3600;
+J2Wh = 1 / Wh2J;
 inflazione = 1.64;
 
 % Dati
-AR_des = 10;
+AR_des = 11;
 t_c_des = 0.15;
-lambda_des = 0.45;
+lambda_des = 0.5;
 Cd0_livello0 = 0.02;
 sweep25_des = 0;
-rho_SL = IntStandAir_SI(0, ['rho']); % [kg/m^3]
-a_SL = IntStandAir_SI(0, ['a']); % [m/s]
-rho_cruise = IntStandAir_SI(h_cruise, ['rho']); % [kg/m^3]
-a_cruise = IntStandAir_SI(h_cruise, ['a']); % [m/s]
+rho_SL = IntStandAir_SI(0, 'rho'); % [kg/m^3]
+a_SL = IntStandAir_SI(0, 'a'); % [m/s]
+rho_cruise = IntStandAir_SI(h_cruise, 'rho'); % [kg/m^3]
+a_cruise = IntStandAir_SI(h_cruise, 'a'); % [m/s]
 V_cruise = M_des * a_cruise; % [m/s]
-visc_dinamica_cruise = IntStandAir_SI(h_cruise, ['mu']); % [kg/(m*s)]
-rho_cruise_diversion = IntStandAir_SI(h_cruise_diversion, ['rho']); % [kg/m^3]
-a_cruise_diversion = IntStandAir_SI(h_cruise_diversion, ['a']); % [m/s]
+visc_dinamica_cruise = IntStandAir_SI(h_cruise, 'mu'); % [kg/(m*s)]
+rho_cruise_diversion = IntStandAir_SI(h_cruise_diversion, 'rho'); % [kg/m^3]
+a_cruise_diversion = IntStandAir_SI(h_cruise_diversion, 'a'); % [m/s]
 V_cruise_diversion = M_cruise_diversion * a_cruise_diversion; % [m/s]
 
 
@@ -65,7 +67,7 @@ IAS_climb_diversion = IAS_climb_diversion * kt2mps; % [m/s]
 IAS_descent_diversion = IAS_descent_diversion * kt2mps; % [m/s]
 
 % prestazioni
-kc = 0.2675*1e-3; % [kg/(W*h)]
+kc = 6.614e-8/J2Wh; % power-specific fuel consumption [kg/(W*h)]
 taxi_time = 240; % [s]
 takeoff_time = 45; % [s]
 a_diversion = 0.0122; % [1/(kg*10^3)]

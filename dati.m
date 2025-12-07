@@ -21,7 +21,7 @@ J2Wh = 1 / Wh2J;
 inflazione = 1.64;
 
 % Dati
-AR_des = 11;
+AR_des = 10;
 t_c_des = 0.15;
 lambda_des = 0.5;
 Cd0_livello0 = 0.02;

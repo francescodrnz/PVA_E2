@@ -1,7 +1,7 @@
 clearvars;close all;clc;requisiti;dati;
 
 W_S = 0.01:1:450; % range di valutazione
-S_ref = 90; % [m^2]
+S_ref = 70; % [m^2]
 WTO = W_S * S_ref; % [kg]
 Cd0 = 0.02;
 k_polare = k_polare_livello0;
@@ -44,7 +44,7 @@ P_W_climb_2 = 1 / (kOEI * etaP) * ...
 % third segment
 gamma3 = atan(1.2/100);
 P_W_climb_3 = 1 / (kOEI * etaP) * ...
-      (0.5 * rho_SL * (1.25*Vstall*kmph2mps)^3  ./ W_S .* ( (Cd0) + ...
+      (0.5 * rho_SL * (1.5*Vstall*kmph2mps)^3  ./ W_S .* ( (Cd0) + ...
       k_polare * (2 * W_S*g / (rho_SL * (1.25*Vstall*kmph2mps)^2) * cos(gamma3)).^2) + ...
       (1.25*Vstall*kmph2mps) * sin(gamma3)); % [W/kg = m^2/s^3]
 
@@ -86,19 +86,25 @@ plot(W_S, P_W_LdgClimb, 'b','Color', 'k', 'LineWidth', 2);
 plot(W_S, P_W_AppClimb, 'b','Color', 'c', 'LineWidth', 2);
 plot(W_S, P_W_cruise, 'b','Color', 'g', 'LineWidth', 2);
 
-condizione_cruise = P_W_cruise > P_W_decollo & ...
-       P_W_cruise > P_W_climb & ...
-       P_W_cruise > P_W_LdgClimb & ...
-       P_W_cruise > P_W_AppClimb;
-condizione_decollo = P_W_decollo > P_W_cruise & ...
-       P_W_decollo > P_W_climb & ...
-       P_W_decollo > P_W_LdgClimb & ...
-       P_W_decollo > P_W_AppClimb;
-x = [interp1(P_W_cruise, W_S, 400), W_S(condizione_cruise), W_S(condizione_decollo) W_S_max, W_S_max];
-y = [420, interp1(W_S(condizione_cruise), P_W_cruise(condizione_cruise), W_S(condizione_cruise)), ...
-    interp1(W_S(condizione_decollo), P_W_decollo(condizione_decollo), W_S(condizione_decollo)), ...
-    interp1(W_S, P_W_decollo, W_S_max), 420];
-fill(x, y, [0.7 0.7 0.7], 'FaceAlpha', 0.6, 'EdgeColor', 'none');
+% 1. Calcola l'inviluppo: per ogni W/S, prendi il valore massimo tra TUTTE le curve
+% Assicurati che tutti i vettori P_W abbiano la stessa dimensione
+P_W_envelope = max([P_W_cruise; P_W_decollo; P_W_climb; P_W_LdgClimb; P_W_AppClimb], [], 1);
+
+% 2. Definisci il limite superiore del grafico (per chiudere il poligono in alto)
+Y_top_limit = 420; 
+
+% 3. Filtra i dati per fermarti alla linea verticale di stallo (W_S_max)
+% Assumo che W_S sia il vettore dell'asse X e W_S_max sia lo scalare del limite verticale
+idx_valid = W_S <= W_S_max; 
+W_S_fill = W_S(idx_valid);
+P_W_bottom = P_W_envelope(idx_valid);
+
+% 4. Costruisci i vettori per il comando fill (chiusura del poligono)
+x_poly = [W_S_fill, fliplr(W_S_fill)];     % Andata e ritorno sull'asse X
+y_poly = [P_W_bottom, ones(size(W_S_fill)) * Y_top_limit]; % Basso (inviluppo) -> Alto
+
+% 5. Disegna
+fill(x_poly, y_poly, [0.7 0.9 0.7], 'FaceAlpha', 0.6, 'EdgeColor', 'none');
 
 legend('Stall Speed', 'Takeoff', 'Climb', 'Landing Climb', 'Approach Climb', 'Cruise', 'Regione accettabile');
 

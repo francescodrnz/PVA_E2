@@ -102,4 +102,12 @@ msgbox(msg, 'Calcolo completato');
 
 
 % salvataggio configurazioni
-salvataggio;
+salvataggio;   
+% figure;
+    % hold on
+    % plot(time,W)
+    % xline(time(i_taxi_out + 1))
+    % xline(time(i_take_off + 1))
+    % xline(time(i_climb + 1))
+    % xline(time(i_cruise + 1))
+    % xline(time(i_descent + 1))

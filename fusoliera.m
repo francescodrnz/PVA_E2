@@ -1,9 +1,9 @@
 larghezza_sedile = 0.52; % [m]
 sedili_fila = 4;
-larghezza_corridoio = 0.48; % [m]
+larghezza_corridoio = 0.5; % [m]
 
 diametro_interno_min = larghezza_sedile*sedili_fila+larghezza_corridoio;
-diametro_esterno_fus = 2.95; % [m]
+diametro_esterno_fus = 2.9; % [m]
 
 numero_file = ceil(passeggeri/sedili_fila);
 pitch_sedile = 0.75; % [m]

@@ -368,21 +368,21 @@ W_fuel_climb = W(i_take_off + 1) - W(i_climb + 1);
     % xline(time(i_cruise + 1))
     % xline(time(i_descent + 1))
 %     hold off
-%     figure;
-%     hold on
-%     plot(time,P_nec)
-%     xline(time(i_taxi_out + 1))
-%     xline(time(i_take_off + 1))
-%     xline(time(i_climb + 1))
-%     xline(time(i_cruise + 1))
-%     xline(time(i_descent + 1))
-%     hold off
-%     figure;
-%     hold on
-%     plot(time,phi_em)
-%     xline(time(i_taxi_out + 1))
-%     xline(time(i_take_off + 1))
-%     xline(time(i_climb + 1))
-%     xline(time(i_cruise + 1))
-%     xline(time(i_descent + 1))
+    % figure;
+    % hold on
+    % plot(time,P_nec)
+    % xline(time(i_taxi_out + 1))
+    % xline(time(i_take_off + 1))
+    % xline(time(i_climb + 1))
+    % xline(time(i_cruise + 1))
+    % xline(time(i_descent + 1))
+    % hold off
+    % figure;
+    % hold on
+    % plot(time,phi_em)
+    % xline(time(i_taxi_out + 1))
+    % xline(time(i_take_off + 1))
+    % xline(time(i_climb + 1))
+    % xline(time(i_cruise + 1))
+    % xline(time(i_descent + 1))
 % end

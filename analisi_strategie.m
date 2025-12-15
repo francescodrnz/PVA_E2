@@ -6,12 +6,12 @@ data = loadMostRecentCSV();
 
 % --- 2. PREPARAZIONE DATI ---
 % Variabile Obiettivo (Target)
-Y_target = data.P_ice;
-Y_label = 'Potenza Termica [W]';
+Y_target = data.P_em/1000;
+Y_label = 'Potenza Elettrica Installata [kW]';
 
 % Variabili di Design (Inputs)
-X_data = [data.W_S, data.Hp, data.phi_ice_cl, data.phi_ice_cr, data.phi_ice_de, data.W_block_fuel];
-var_names = {'W/S', 'H_P', '\Phi_{climb}', '\Phi_{cruise}', '\Phi_{descent}', 'Block Fuel [kg]'}; 
+X_data = [data.W_S, data.Hp, data.phi_ice_cl, data.phi_ice_cr, data.phi_ice_de];
+var_names = {'W/S', 'H_P', '\Phi_{climb}', '\Phi_{cruise}', '\Phi_{descent}'}; 
 num_vars = length(var_names);
 
 
@@ -32,20 +32,11 @@ for i = 1:num_vars
     u_vals = unique(X_data(:,i));
     n_unique = length(u_vals);
     
-    if n_unique >= 5
-        % Se ho abbastanza punti, uso una parabola (grado 2) per vedere curvature
-        degree = 4;
-    elseif n_unique >= 4
-        % Se ho abbastanza punti, uso una parabola (grado 2) per vedere curvature
-        degree = 3;
-    elseif n_unique >= 3
-        % Se ho abbastanza punti, uso una parabola (grado 2) per vedere curvature
-        degree = 2;
+    if n_unique >= 3
+        degree = 2; % Massimo grado 2 (parabola) per evitare "onde" irreali
     elseif n_unique == 2
-        % Se ho solo 2 punti (es. 0.1 e 0.3), uso una retta (grado 1)
         degree = 1;
     else
-        % Caso degenere (variabile costante), grado 0
         degree = 0; 
     end
     
@@ -62,6 +53,35 @@ for i = 1:num_vars
         
         plot(x_range, y_fit, 'r-', 'LineWidth', 2);
     end
+
+    % --- FIX LIMITI ASSE X ---
+    min_val = min(X_data(:,i));
+    max_val = max(X_data(:,i));
+    delta = max_val - min_val;
+    
+    % Se i dati variano, imposta i limiti con un margine del 5%
+    if delta > 1e-6
+        padding = delta * 0.05; % 5% di margine a dx e sx
+        xlim([min_val - padding, max_val + padding]);
+    else
+        % Se la variabile è costante (delta=0), centriamo la vista
+        xlim([min_val - 0.1, max_val + 0.1]);
+    end
+
+    % --- MODIFICA INTELLIGENTE DEI TICKS ---
+    % Se la variabile ha pochi valori discreti (es. < 10), forza i tick su quei valori
+    if n_unique <= 10
+        xticks(u_vals); % Imposta i tick esattamente sui dati (es. 280, 300, 325...)
+        xtickformat('%.4g'); % Rimuove zeri inutili (es. mostra 0.1 invece di 0.1000)
+    else
+        % Se sono tanti punti sparsi, lascia fare a MATLAB
+        xticks('auto');
+    end
+    
+    % Opzionale: se i numeri si sovrappongono, ruotali leggermente
+    % xtickangle(45); 
+
+    xlabel(var_names{i}, 'FontWeight', 'bold');
     
     xlabel(var_names{i}, 'FontWeight', 'bold');
     if i == 1
@@ -70,7 +90,6 @@ for i = 1:num_vars
     grid on; box on;
     title(['vs ' var_names{i}]);
 end
-sgtitle('Trend diretti: Come ogni variabile influenza il consumo', 'FontSize', 14);
 
 
 % --- 4. PLOT 2: SENSITIVITY ANALYSIS (Correlazione) ---
@@ -99,15 +118,14 @@ yticklabels(var_names);
 grid on; box on;
 xlim([-1 1]); % Forza asse da -1 a 1 per vedere la magnitudo
 xlabel('Coefficiente di Correlazione', 'FontWeight', 'bold');
-title('Analisi di Sensibilità sul Block Fuel', 'FontSize', 14);
 
 % Annotazioni
-text(-0.1, num_vars+0.6, '\leftarrow Riduce Potenza Termica Installata', 'Color', [0 0.5 0], 'HorizontalAlignment', 'right','FontSize', 14);
-text(0.1, num_vars+0.6, 'Aumenta Potenza Termica Installata \rightarrow', 'Color', [0.6 0 0], 'HorizontalAlignment', 'left','FontSize', 14);
+text(-0.1, num_vars+0.6, '\leftarrow Riduce Potenza Elettrica Installata', 'Color', [0 0.5 0], 'HorizontalAlignment', 'right','FontSize', 14);
+text(0.1, num_vars+0.6, 'Aumenta Potenza Elettrica Installata \rightarrow', 'Color', [0.6 0 0], 'HorizontalAlignment', 'left','FontSize', 14);
 xline(0, 'k-', 'LineWidth', 1.5);
 
 % --- 5. SALVATAGGIO ---
-saveas(1, 'Impact_Trends_P_ice.png');
-saveas(2, 'Impact_Sensitivity_P_ice.png');
+saveas(1, 'OK_Impact_Trends_P_em.png');
+saveas(2, 'OK_Impact_Sensitivity_P_em.png');
 
-disp('Grafici generati senza warning di fitting.');
+disp('Grafici salvati.');

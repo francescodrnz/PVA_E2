@@ -1,12 +1,12 @@
 clearvars;close all;clc;requisiti;dati;fusoliera;
 
 % variabili di design
-% W_S_vect = [280 300 325 350]; % [kg/m^2]
-% phi_ice_cl_vect = [0.1 0.3 0.5];
-% phi_ice_cr_vect = [0.1 0.2 0.3 0.4 0.5];
-% phi_ice_de_vect = [0.1 0.3];
-% Hp_vect = [0.1 0.2 0.3 0.4]; % fattore di ibridizzazione
-aereo_scelto;
+W_S_vect = [280 300 325 350]; % [kg/m^2]
+phi_ice_cl_vect = [0.1 0.3 0.5];
+phi_ice_cr_vect = [0.1 0.2 0.3 0.4 0.5];
+phi_ice_de_vect = [0.1 0.3];
+Hp_vect = [0.1 0.2 0.3 0.4]; % fattore di ibridizzazione
+% aereo_scelto;
 
 % inizializzazione valori del ciclo
 Cd0 = Cd0_livello0;
@@ -18,7 +18,7 @@ W_inizializzazione = 10000; % [kg] stima preliminare a caso
 % parametri ciclo convergenza
 indice_contatore = 0;
 tolleranza = 25; % [kg]
-iterazioni_max = 1000;
+iterazioni_max = 200;
 
 % Preallocazione degli array per memorizzare i risultati
 preallocazione;

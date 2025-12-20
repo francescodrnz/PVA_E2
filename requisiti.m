@@ -2,7 +2,7 @@
 H_req = 319;
 L_req = 693;
 passeggeri = round(30+15*L_req/999); % = 40
-range = 300+300*(H_req-319)/43 *1.852; % [km] = 300 nm
+range = (300+300*(H_req-319)/43 )*1.852; % [km] = 300 nm
 BED = 400+200*L_req/999; % [W*h/kg] = 538.7
 % BFL = 1100; % [m]
 

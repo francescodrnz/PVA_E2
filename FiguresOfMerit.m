@@ -9,7 +9,8 @@ try
     % Variabili Base
     W_fuel = data.W_block_fuel;    
     W_batt = data.W_battery;       
-    MTOW   = data.WTO;             
+    MTOW   = data.WTO;
+    P_em   = data.P_em/1000;
     WS     = data.W_S;             
     
     % Variabili Potenza
@@ -50,11 +51,11 @@ end
 [min_fuel, idx_best] = min(W_fuel);
 
 % B) DESIGN SCELTO
-target_WS = 280;
+target_WS = 300;
 target_phi_cl = 0.1;
 target_phi_cr = 0.1;
 target_phi_de = 0.3;
-target_Hp = 0.4;
+target_Hp = 0.3;
 
 tol = 1e-4;
 idx_chosen = find(abs(in_WS - target_WS) < tol & ...
@@ -82,14 +83,15 @@ u_phi_tags = unique(phi_tags);
 
 % --- 4. PLOT 1: FUEL vs BATTERIE ---
 figure('Name', '1_Fuel_vs_Batt', 'Color', 'w');
-scatter(W_batt, W_fuel, 40, MTOW, 'filled', 'MarkerFaceAlpha', 0.7); 
-colormap(jet); c = colorbar; c.Label.String = 'MTOW [kg]';
+scatter(W_batt, W_fuel, 40, P_em, 'filled', 'MarkerFaceAlpha', 0.7); 
+colormap(jet); c = colorbar; c.Label.String = 'Potenza elettrica installata [kW]';
 grid on; xlabel('Massa Batterie [kg]'); ylabel('Block Fuel [kg]'); 
 title('Trade-off: Fuel vs Batterie');
 hold on;
-scatter(W_batt(idx_best), W_fuel(idx_best), 250, MTOW(idx_best), 'p', 'filled', 'MarkerEdgeColor', 'k', 'LineWidth', 1.5);
-scatter(W_batt(idx_chosen), W_fuel(idx_chosen), 250, MTOW(idx_chosen), 'p', 'filled', 'MarkerEdgeColor', 'k', 'LineWidth', 1.5);
-add_text(W_batt(idx_chosen), W_fuel(idx_chosen), sprintf('Scelto\nFuel: +%.0f kg', W_fuel(idx_chosen)-min_fuel));
+scatter(W_batt(idx_best), W_fuel(idx_best), 250, P_em(idx_best), 'p', 'filled', 'MarkerEdgeColor', 'k', 'LineWidth', 1.5);
+scatter(W_batt(idx_chosen), W_fuel(idx_chosen), 250, P_em(idx_chosen), 'p', 'filled', 'MarkerEdgeColor', 'k', 'LineWidth', 1.5);
+add_text(W_batt(idx_chosen)*1.035, W_fuel(idx_chosen)*1.085, sprintf('Configurazione scelta:\nFuel: +%.0f kg\nBatterie: %.0f kg\nPotenza elettrica: %.0f kW',...
+    W_fuel(idx_chosen)-min_fuel, W_batt(idx_chosen)-W_batt(idx_best), P_em(idx_chosen)-P_em(idx_best)));
 
 
 % --- 5. PLOT 2: MTOW vs FUEL ---
@@ -97,11 +99,11 @@ figure('Name', '2_MTOW_vs_Fuel', 'Color', 'w');
 scatter(MTOW, W_fuel, 40, W_batt, 'filled', 'MarkerFaceAlpha', 0.7);
 colormap(parula); c = colorbar; c.Label.String = 'Batt Mass [kg]';
 grid on; xlabel('MTOW [kg]'); ylabel('Block Fuel [kg]'); 
-title('Ambiente vs Costi');
+% title('Emissioni vs Costi');
 hold on;
-scatter(MTOW(idx_best), W_fuel(idx_best), 250, W_batt(idx_best), 'p', 'filled', 'MarkerEdgeColor', 'k', 'LineWidth', 1.5);
-scatter(MTOW(idx_chosen), W_fuel(idx_chosen), 250, W_batt(idx_chosen), 'p', 'filled', 'MarkerEdgeColor', 'k', 'LineWidth', 1.5);
-add_text(MTOW(idx_chosen), W_fuel(idx_chosen), sprintf('Scelto\nMTOW: %.0f kg', MTOW(idx_chosen)));
+% scatter(MTOW(idx_best), W_fuel(idx_best), 250, W_batt(idx_best), 'p', 'filled', 'MarkerEdgeColor', 'k', 'LineWidth', 1.5);
+% scatter(MTOW(idx_chosen), W_fuel(idx_chosen), 250, W_batt(idx_chosen), 'p', 'filled', 'MarkerEdgeColor', 'k', 'LineWidth', 1.5);
+% add_text(MTOW(idx_chosen), W_fuel(idx_chosen), sprintf('Scelto\nMTOW: %.0f kg', MTOW(idx_chosen)));
 
 
 % --- 6. PLOT 3: POTENZA TERMICA vs ELETTRICA (LINEE HP) ---
@@ -114,27 +116,45 @@ for i = 1:length(u_Hp)
     x_grp = P_el(idx_grp); y_grp = P_ice(idx_grp);
     [x_grp, sort_ord] = sort(x_grp); y_grp = y_grp(sort_ord);
     plot(x_grp, y_grp, '--', 'Color', [0.7 0.7 0.7], 'LineWidth', 1);
-    text(x_grp(end), y_grp(end), sprintf('HP=%.1f', curr_hp), 'FontSize', 11, 'Color', [0.4 0.4 0.4]);
+    text(x_grp(end)*.9, y_grp(end)*.85, sprintf('HP=%.1f', curr_hp), 'FontSize', 11, 'Color', [0.4 0.4 0.4]);
 end
 scatter(P_el, P_ice, 40, W_fuel, 'filled', 'MarkerFaceAlpha', 0.8);
 colormap(flipud(hot)); c = colorbar; c.Label.String = 'Block Fuel [kg]';
 grid on; xlabel('Potenza Elettrica Totale [W]', 'FontWeight', 'bold');
 ylabel('Potenza Termica Totale [W]', 'FontWeight', 'bold');
-title('Power Split', 'FontSize', 12);
-scatter(P_el(idx_best), P_ice(idx_best), 250, W_fuel(idx_best), 'p', 'filled', 'MarkerEdgeColor', 'k', 'LineWidth', 1.5);
-scatter(P_el(idx_chosen), P_ice(idx_chosen), 250, W_fuel(idx_chosen), 'p', 'filled', 'MarkerEdgeColor', 'k', 'LineWidth', 1.5);
+% title('Power Split', 'FontSize', 12);
 delta_P_el = P_el(idx_chosen) - P_el(idx_best);
 delta_P_ice = P_ice(idx_chosen) - P_ice(idx_best);
-txt_str = sprintf('Scelto:\n\\Delta P_{el}: %.0f kW\n\\Delta P_{ice}: %.0f kW', delta_P_el, delta_P_ice);
-add_text(P_el(idx_chosen), P_ice(idx_chosen), txt_str);
-
 
 
 
 
 % --- SALVATAGGIO ---
-saveas(1, 'FOM_1_Fuel_Batt.png');
-saveas(2, 'FOM_2_MTOW_Fuel.png');
-saveas(3, 'FOM_3_PowerSplit.png');
+% saveas(1, 'FOM_1_Fuel_Batt.png');
+% saveas(2, 'FOM_2_MTOW_Fuel.png');
+% saveas(3, 'FOM_3_PowerSplit.png');
 
 disp('Grafici generati. Plot 4 ora raggruppa per strategia Phi.');
+
+%% --- 8. PLOT 5: PARADOSSO TERMICO (P_ice vs Fuel, color by P_em) ---
+figure('Name', '5_Thermal_vs_Fuel_ColorPEM', 'Color', 'w');
+
+% Scatter plot: Potenza Termica vs Fuel, colorato per Potenza Elettrica
+sc = scatter(P_ice/1000, W_fuel, 60, P_em, 'filled', 'MarkerFaceAlpha', 0.7);
+
+% Estetica assi
+grid on;
+xlabel('Potenza Termica Installata [kW]', 'FontWeight', 'bold');
+ylabel('Block Fuel [kg]', 'FontWeight', 'bold');
+
+% Colorbar: Mostra che il driver è l'elettrificazione
+colormap(cool);
+c = colorbar; 
+c.Label.String = 'Potenza Elettrica Installata [kW]';
+
+hold on;
+
+
+% Salvataggio
+saveas(gcf, 'FOM_5_Thermal_vs_Fuel.png');
+fprintf('Grafico Paradosso Termico generato.\n');

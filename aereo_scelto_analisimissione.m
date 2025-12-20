@@ -10,8 +10,8 @@ dati;
 fusoliera;
 
 % --- 2. IMPOSTAZIONE VARIABILI DI DESIGN (LA TUA SCELTA) ---
-W_S_des     = 280;   % [kg/m^2]
-Hp_des      = 0.4;   % Fattore ibridizzazione
+W_S_des     = 300;   % [kg/m^2]
+Hp_des      = 0.3;   % Fattore ibridizzazione
 phi_ice_cl  = 0.1;
 phi_ice_cr  = 0.1;
 phi_ice_de  = 0.3;
@@ -229,7 +229,7 @@ plot(t_std, P_ice_hist(1:end_std)/1000, 'Color', col_ice, 'LineWidth', 1.5);
 p_tot = plot(t_std, P_tot_inst/1000, '--', 'Color', [0.3 0.3 0.3], 'LineWidth', 1.2);
 
 ylabel('Potenza [kW]', 'FontWeight', 'bold');
-ylim([0, 4500]); 
+ylim([0, 7000]); 
 ax = gca; ax.YColor = 'k';
 
 % --- ASSE DESTRO: PHI EM ---
@@ -274,10 +274,10 @@ end
 % Legenda personalizzata
 % Uso h_area(1) e h_area(2) per mostrare i quadratini colorati
 legend([h_area(1), h_area(2), p_tot, p_phi], ...
-    {'Potenza Termica (ICE)', 'Potenza Elettrica (EM, Stacked)', 'Potenza Totale', '\Phi_{EM}'}, ...
+    {'Potenza Termica', 'Potenza Elettrica (Stacked)', 'Potenza Totale', '\Phi_{EM}'}, ...
     'Location', 'north', 'FontSize', 9, 'Orientation', 'horizontal');
 
-title('\textbf{Strategia di Gestione Energetica}', 'Interpreter', 'latex', 'FontSize', 12);
+title('\textbf{Strategia di Erogazione della Potenza}', 'Interpreter', 'latex', 'FontSize', 12);
 xlim([0, t_std(end)]);
 
 % Linee verticali
@@ -445,7 +445,7 @@ CO2_Ref_specific = (CO2_Ref_total * 1000) / (Pax_Ref_Actual * Range_km);
 Energy_Ref_MJ = Fuel_Ref_kg * Energy_Density_Fuel; % Tutto dal fuel
 
 % Calcolo Riduzione
-Reduction_CO2 = (1 - CO2_Hybrid_total / CO2_Ref_total) * 100;
+Reduction_CO2 = (1 - CO2_Hybrid_specific / CO2_Ref_specific) * 100;
 
 fprintf('Emissioni CO2 Totali: %.1f kg (Hybrid) vs %.1f kg (Ref)\n', CO2_Hybrid_total, CO2_Ref_total);
 fprintf('Metrica Specifica:    %.1f g/pax/km (Hybrid) vs %.1f g/pax/km (Ref)\n', CO2_Hybrid_specific, CO2_Ref_specific);
@@ -493,7 +493,7 @@ b_mix(1).FaceColor = [0.8 0.3 0.3]; % Rosso (Fuel)
 b_mix(2).FaceColor = [0.2 0.7 0.4]; % Verde (Batteria)
 
 xlabel('Ripartizione Energia Totale Utilizzata [%]', 'FontWeight', 'bold');
-yticklabels({'Reference', 'Hybrid Design'});
+yticklabels({'ATR-42 600', 'Hybrid Design'});
 xlim([0 100]);
 legend({'Energia da Carburante', 'Energia da Batterie'}, 'Location', 'southoutside');
 title('\textbf{Energy Source Mix}', 'Interpreter', 'latex', 'FontSize', 12);

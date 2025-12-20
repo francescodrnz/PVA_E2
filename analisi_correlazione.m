@@ -7,7 +7,7 @@ data = loadMostRecentCSV();
 % --- 2. CONFIGURAZIONE: VARIABILI DA ESCLUDERE ---
 % Aggiungi qui i nomi delle colonne che NON vuoi analizzare
 % Esempio: {'iter_index', 'P_curr', 'CO2'}
-excluded_vars = {'PhiClimb','PhiDescent','PhiCruise','H_P','CaricoAlare','VFuel', 'CO2','PREE','S_orizz', 'S_vert', 'flight_cost','n','electricity_cost','maintenance_cost','ADP','DOC', 'P_curr', 'cRoot', 'b'}; % <--- MODIFICA QUI
+excluded_vars = {'PhiClimb','PhiDescent','PhiCruise','H_P','CaricoAlare','VFuel', 'CO2','PREE','S_orizz', 'S_vert', 'flight_cost','n','electricity_cost','maintenance_cost','ADP','DOC', 'P_curr', 'cRoot', 'b', 'EBattInst'}; % <--- MODIFICA QUI
 
 % --- 3. PULIZIA E PREPARAZIONE DATI ---
 % Rimuoviamo le variabili escluse manualmente

@@ -1,13 +1,13 @@
 % ricalcolare potenze con Hp
 P_tot = P_curr / (etaGear*etaProp);
-% in teoria è così ma avevo sbagliato e fatto tutto il report quindiiiiiii
-% P_em_shaft = Hp_des * P_tot; % [W] potenza elettrica all'albero
-% P_em = P_em_shaft / etaEm;
-% P_ice = P_tot - P_em_shaft;
-P_em = Hp_des * P_tot / etaEm; % [W] potenza elettrica installata
-P_ice = P_tot - P_em; 
+P_em_shaft = Hp_des * P_tot; % [W] potenza elettrica all'albero
+P_em = P_em_shaft / etaEm;
+P_ice = P_tot - P_em_shaft;
+% vecchia logica sbagliata
+% P_em = Hp_des * P_tot / etaEm; % [W] potenza elettrica installata
+% P_ice = P_tot - P_em; 
 
-dt = 5; % [s]
+dt = 1; % [s]
 % initial conditions
 W_start = WTO_curr; % [kg]
 z_start = 0; % [m]

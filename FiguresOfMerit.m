@@ -84,7 +84,7 @@ u_phi_tags = unique(phi_tags);
 % --- 4. PLOT 1: FUEL vs BATTERIE ---
 figure('Name', '1_Fuel_vs_Batt', 'Color', 'w');
 scatter(W_batt, W_fuel, 40, P_em, 'filled', 'MarkerFaceAlpha', 0.7); 
-colormap(jet); c = colorbar; c.Label.String = 'Potenza elettrica installata [kW]';
+colormap(hsv); c = colorbar; c.Label.String = 'Potenza elettrica installata [kW]';
 grid on; xlabel('Massa Batterie [kg]'); ylabel('Block Fuel [kg]'); 
 title('Trade-off: Fuel vs Batterie');
 hold on;
@@ -92,6 +92,7 @@ scatter(W_batt(idx_best), W_fuel(idx_best), 250, P_em(idx_best), 'p', 'filled', 
 scatter(W_batt(idx_chosen), W_fuel(idx_chosen), 250, P_em(idx_chosen), 'p', 'filled', 'MarkerEdgeColor', 'k', 'LineWidth', 1.5);
 add_text(W_batt(idx_chosen)*1.035, W_fuel(idx_chosen)*1.085, sprintf('Configurazione scelta:\nFuel: +%.0f kg\nBatterie: %.0f kg\nPotenza elettrica: %.0f kW',...
     W_fuel(idx_chosen)-min_fuel, W_batt(idx_chosen)-W_batt(idx_best), P_em(idx_chosen)-P_em(idx_best)));
+saveas(1, 'FOM_1_Fuel_Batt.png');
 
 
 % --- 5. PLOT 2: MTOW vs FUEL ---
@@ -130,7 +131,6 @@ delta_P_ice = P_ice(idx_chosen) - P_ice(idx_best);
 
 
 % --- SALVATAGGIO ---
-% saveas(1, 'FOM_1_Fuel_Batt.png');
 % saveas(2, 'FOM_2_MTOW_Fuel.png');
 % saveas(3, 'FOM_3_PowerSplit.png');
 

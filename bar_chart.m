@@ -4,7 +4,7 @@ clc; close all;
 % 1. Caricamento e Selezione (Identico a sopra)
 data = loadMostRecentCSV(); 
 [~, idx_best] = min(data.W_block_fuel);
-target_fuel = 118.5; 
+target_fuel = 298.76; 
 [~, idx_scelto] = min(abs(data.W_block_fuel - target_fuel));
 
 % 2. Preparazione Dati
@@ -38,7 +38,7 @@ b(2).FaceColor = '#A2142F'; % Rosso (Best Fuel)
 ylabel('Valore Normalizzato (Scelto = 1.0)');
 title('Confronto Prestazionale: Scelto vs Minimo Fuel');
 legend({'Design Scelto', 'Minimo Fuel'}, 'Location', 'northeast');
-grid on; ylim([0.8 1.25]);
+grid on; 
 
 % 4. Aggiunta Etichette Percentuali
 % Calcola le percentuali di differenza
@@ -47,6 +47,8 @@ diff_perc = (y_best - 1) * 100;
 % Posiziona il testo sopra le barre rosse (la seconda serie, b(2))
 xtips = b(2).XEndPoints;
 ytips = b(2).YEndPoints;
+
+ylim([0.8 max(ytips)*1.1]);
 
 for i = 1:length(diff_perc)
     label = sprintf('%+.1f%%', diff_perc(i));

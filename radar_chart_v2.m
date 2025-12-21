@@ -24,14 +24,14 @@ end
 
 % --- 3. IDENTIFICAZIONE CONFIGURAZIONI ---
 % A) REFERENCE: BEST FUEL
-[~, idx_ref] = min(data.W_block_fuel);
+[~, idx_ref] = min(abs(data.W_block_fuel-298.77));
 
 % B) TARGET: DESIGN SCELTO
-target_WS = 280; 
+target_WS = 300; 
 target_phi_cl = 0.1; 
 target_phi_cr = 0.1; 
 target_phi_de = 0.3; 
-target_Hp = 0.4;
+target_Hp = 0.3;
 tol = 1e-4; 
 
 idx_target = find(abs(data.W_S - target_WS) < tol & ...
@@ -89,7 +89,7 @@ for i = 1:n_metrics
 
         if pct_diff < 0
             txt_col = txt_col_neg;
-            base_offset = -0.06; % Di base spingo dentro
+            base_offset = -0.04; % Di base spingo dentro
         else
             txt_col = txt_col_pos;
             base_offset = 0.04;  % Di base spingo fuori
@@ -100,7 +100,7 @@ for i = 1:n_metrics
         
         % 1. Fix per "Block Fuel" (i=1): spingere più in fuori per non coprire l'asse
         if i == 1 && pct_diff > 0
-             rad_offset = -0.1; 
+             rad_offset = +.05; 
         end
 
         % 2. Fix per le etichette in basso (i=6, 7, 8) che facevano mucchio.
@@ -108,7 +108,7 @@ for i = 1:n_metrics
         if i == 6 % P_ICE
             rad_offset = 0.06;
         elseif i == 7 % Massa Prop.
-            rad_offset = 0.13; % La più esterna
+            rad_offset = 0.06; % La più esterna
         elseif i == 8 % Sup. Alare
             rad_offset = 0.06;
         end
@@ -149,18 +149,18 @@ ax.ThetaTick = rad2deg(theta(1:end-1));
 ax.ThetaTickLabel = metric_labels;
 ax.FontSize = 11;
 ax.RAxisLocation = 90; 
-rlim([0.8 1.30]); % Zoom leggermente allargato per le nuove etichette
+rlim([0.8 1.15]); % Zoom leggermente allargato per le nuove etichette
 
 % -- LEGENDA (Aggiornata con i nuovi colori) --
 str_scelto = sprintf('Design Scelto (W/S=%d, H_P=%.1f, \\Phi=[%.1f, %.1f, %.1f])', ...
     data.W_S(idx_target), data.Hp(idx_target), ...
     data.phi_ice_cl(idx_target), data.phi_ice_cr(idx_target), data.phi_ice_de(idx_target));
-str_ref = sprintf('Minimo Block Fuel (W/S=%d, H_P=%.1f, \\Phi=[%.1f, %.1f, %.1f])', ...
+str_ref = sprintf('Block Fuel Inferiore (W/S=%d, H_P=%.1f, \\Phi=[%.1f, %.1f, %.1f])', ...
     data.W_S(idx_ref), data.Hp(idx_ref), ...
     data.phi_ice_cl(idx_ref), data.phi_ice_cr(idx_ref), data.phi_ice_de(idx_ref));
 
 legend({str_ref, str_scelto}, ...
     'Location', 'southoutside', 'Orientation', 'vertical', 'FontSize', 11);
 
-title('Confronto configurazione scelta vs. minimo block fuel', 'FontSize', 14, 'FontWeight', 'bold');
+title('Confronto configurazione scelta vs. < 2 MW con block fuel inferiore', 'FontSize', 14, 'FontWeight', 'bold');
 saveas(gcf, 'Radar_Comparison.png');

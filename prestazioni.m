@@ -7,7 +7,7 @@ P_ice = P_tot - P_em_shaft;
 % P_em = Hp_des * P_tot / etaEm; % [W] potenza elettrica installata
 % P_ice = P_tot - P_em; 
 
-dt = 1; % [s]
+dt = 5; % [s]
 % initial conditions
 W_start = WTO_curr; % [kg]
 z_start = 0; % [m]

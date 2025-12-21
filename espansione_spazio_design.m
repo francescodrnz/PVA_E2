@@ -1,4 +1,4 @@
-%% Script Analisi Trade-off: Diminishing Returns + Vincolo Potenza
+%% Script Analisi Trade-off: Fronte di Pareto con Vincolo
 clc; close all; clearvars;
 
 % --- 1. CARICAMENTO DATI ---
@@ -6,91 +6,100 @@ data = loadMostRecentCSV();
 
 % Estrazione Variabili
 X_fuel = data.W_block_fuel;
-Y_mtow = data.WTO;
-P_em_vec = data.P_em; % Assumo sia in [kW]. Se è in W, usa data.P_em / 1000
+Y_batt = data.W_battery; 
+P_em_vec = data.P_em; % [W] o [kW] a seconda dei dati
 
-% --- 2. IDENTIFICAZIONE PUNTI E FILTRI ---
-% Soglia di Potenza (2 MW = 2000 kW)
-limit_power = 1.95e6; 
+% --- 2. FILTRAGGIO (Vincolo Potenza) ---
+limit_power = 2.16e6; % 2.15 MW
+idx_feasible = P_em_vec <= limit_power; % Punti "Buoni" (Rossi)
+idx_excluded = P_em_vec > limit_power;  % Punti "Esclusi" (Grigi)
 
-% Maschere logiche
-idx_feasible = P_em_vec <= limit_power; % Punti "Buoni"
-idx_excluded = P_em_vec > limit_power;  % Punti "Esclusi"
+% Coordinate punti fattibili per il calcolo Pareto
+x_feas = X_fuel(idx_feasible);
+y_feas = Y_batt(idx_feasible);
 
-% Trova i punti specifici (Scelto e Best)
-[~, idx_scelto] = min(abs(X_fuel - 118.5)); 
-[~, idx_best] = min(abs(X_fuel - 102.8)); 
+% --- 3. CALCOLO FRONTE DI PARETO ---
+% Cerchiamo di minimizzare sia Fuel che Batterie.
+% Un punto i domina j se: (x_i <= x_j) AND (y_i <= y_j) con almeno una disuguaglianza stretta.
+% Il fronte di Pareto è l'insieme dei punti non dominati.
 
-% Coordinate per il plot
-x_green = X_fuel(idx_scelto);
-y_green = Y_mtow(idx_scelto);
-x_red = X_fuel(idx_best);
-y_red = Y_mtow(idx_best);
+is_pareto = false(size(x_feas));
+for i = 1:length(x_feas)
+    % Controlla se esiste un punto 'j' che domina 'i'
+    % Nota: Poiché abbiamo un trade-off (Meno fuel = Più batterie), 
+    % il fronte sarà il bordo "inferiore" della nuvola.
+    is_dominated = any(x_feas <= x_feas(i) & y_feas <= y_feas(i) & ...
+                      (x_feas < x_feas(i) | y_feas < y_feas(i)));
+    if ~is_dominated
+        is_pareto(i) = true;
+    end
+end
 
-% Calcolo Delta
-d_fuel = x_green - x_red;     
-d_weight = y_red - y_green;   
-rate = d_weight / d_fuel;
+% Estrai punti Pareto e ordinali per il plot (fondamentale per fare la linea)
+x_pareto = x_feas(is_pareto);
+y_pareto = y_feas(is_pareto);
+[x_pareto, sort_idx] = sort(x_pareto);
+y_pareto = y_pareto(sort_idx);
 
-% --- 3. PLOT ---
-figure('Name', 'Design_Cost_Power_Constraint', 'Color', 'w', 'Position', [150 150 900 600]);
+% --- 4. IDENTIFICAZIONE PUNTO SCELTO ---
+% Trova il punto scelto (quello a ~319.88 kg fuel)
+% Cerchiamo nell'intero dataset per avere l'indice corretto
+[~, idx_scelto_global] = min(abs(X_fuel - 319.88)); 
+x_green = X_fuel(idx_scelto_global);
+y_green = Y_batt(idx_scelto_global);
+
+% --- 5. PLOT ---
+figure('Name', 'Pareto_Frontier', 'Color', 'w', 'Position', [150 150 1000 600]);
 hold on;
 
-% A) Scatter Punti FATTIBILI (Grigio)
-h1 = scatter(X_fuel(idx_feasible), Y_mtow(idx_feasible), 40, [1 0.8 0.6], 'filled'); 
+% A) Scatter Punti ESCLUSI (Sfondo, Grigio chiaro)
+h_excl = scatter(X_fuel(idx_excluded), Y_batt(idx_excluded), 30, [0.85 0.85 0.85], 'filled');
 
-% B) Scatter Punti ESCLUSI (> 2MW) (Arancione Chiaro)
-h2 = scatter(X_fuel(idx_excluded), Y_mtow(idx_excluded), 40, [0.85 0.85 0.85], 'filled'); 
+% B) Scatter Punti FATTIBILI (Rosso)
+h_feas = scatter(x_feas, y_feas, 30, [0.9 0.2 0.2], 'filled', 'MarkerFaceAlpha', 0.6);
 
-% C) Linee del "Percorso" a gradino
-line([x_green, x_red], [y_green, y_green], 'Color', [0 0.45 0.74], 'LineWidth', 3); 
-line([x_red, x_red], [y_green, y_red], 'Color', [0.85 0.33 0.1], 'LineWidth', 3);
+% C) Fronte di Pareto (Linea Nera Spessa)
+h_line = plot(x_pareto, y_pareto, 'k-', 'LineWidth', 2);
 
-% D) Punti Scelti (Sopra tutto)
-h3 = plot(x_green, y_green, 'p', 'MarkerSize', 22, ...
-    'MarkerFaceColor', '#77AC30', 'MarkerEdgeColor', 'k', 'LineWidth', 1.5); % Stella Verde
-h4 = plot(x_red, y_red, 'h', 'MarkerSize', 22, ...
-    'MarkerFaceColor', '#A2142F', 'MarkerEdgeColor', 'k', 'LineWidth', 1.5); % Esagono Rosso
+% D) Punto Scelto (Stella Verde)
+h_star = plot(x_green, y_green, 'p', 'MarkerSize', 18, ...
+    'MarkerFaceColor', '#77AC30', 'MarkerEdgeColor', 'k', 'LineWidth', 1.5);
 
-% --- 4. ANNOTAZIONI ---
-% Etichette assi del trade-off
-text(mean([x_green, x_red]), y_green - 50, sprintf('-%.1f kg Fuel', d_fuel), ...
-    'HorizontalAlignment', 'center', 'VerticalAlignment', 'top', ...
-    'Color', [0 0.45 0.74], 'FontWeight', 'bold', 'FontSize', 10);
-
-text(x_red + 2.3, mean([y_green, y_red])+30, sprintf('+%.0f kg MTOW', d_weight), ...
-    'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle', ...
-    'Color', [0.85 0.33 0.1], 'FontWeight', 'bold', 'FontSize', 10);
-
-% Box Informativo
-text_str = sprintf(['\\rmSi aggiungono \\bf%.0f kg\\rm di MTOW\n' ...
-    'per risparmiare \\bf%.1f kg\\rm fuel\n' ...
-    '\\it(Rapporto %.1f : 1)'], d_weight, d_fuel, rate);
-
-text(180, 2.3e4, text_str, ... % Coordinate manuali (aggiusta se serve)
-    'HorizontalAlignment', 'left', ...
-    'VerticalAlignment', 'bottom', ...
-    'BackgroundColor', 'w', ...
-    'EdgeColor', 'k', ...
-    'Margin', 6, ...
-    'FontSize', 11);
-
-% --- 5. FORMATTAZIONE FINALE ---
+% --- 6. FORMATTAZIONE E ANNOTAZIONI ---
 xlabel('Block Fuel [kg]', 'FontWeight', 'bold');
-ylabel('MTOW [kg]', 'FontWeight', 'bold');
-set(gca, 'XDir', 'reverse'); % Fuel decrescente a destra
+ylabel('Massa Batterie [kg]', 'FontWeight', 'bold');
+set(gca, 'XDir', 'reverse'); % Fuel decrescente verso destra (più intuitivo per "miglioramento")
 grid on; box on;
-title('Analisi Costi-Benefici con Vincolo di Potenza Elettrica', 'FontSize', 12);
 
-% Legenda Aggiornata
-legend([h3, h4, h1, h2], ...
-    {'Design scelto', 'Minimo block fuel', 'P_{EM} < 2 MW', 'P_{EM} > 2 MW'}, ...
-    'Location', 'southeast', 'FontSize', 10);
+title(['Fronte di Pareto con potenza elettrica <= ' sprintf('%.2f', limit_power/1e6+.04) ' MW'], ...
+    'Interpreter', 'tex', 'FontSize', 14);
 
-% Zoom
-margin_x = 80; 
-margin_y = 1000;
-xlim([min([x_red, x_green]) - margin_x*.53, max([x_red, x_green]) + margin_x]);
-ylim([min([y_red, y_green]) - margin_y*1.5, max([y_red, y_green]) + margin_y*.6]);
+% Legenda
+legend([h_star, h_line, h_feas, h_excl], ...
+    {'Design Scelto', 'Fronte di Pareto', 'Configurazioni fattibili (<=2.2 MW)', 'Configurazioni escluse (>2.2 MW)'}, ...
+    'Location', 'northwest', 'FontSize', 11);
 
-saveas(gcf, 'costi-benefici alternativa.png');
+
+% Annotazione Intelligente
+% Calcola distanza dal fronte (se il punto scelto non fosse perfettamente sul fronte numerico)
+min_fuel_pareto = min(x_pareto);
+max_fuel_pareto = max(x_pareto);
+
+annotation_str = sprintf(['\\bfDesign Scelto\\rm\n' ...
+                          'Fuel: %.1f kg\n' ...
+                          'Batt: %.0f kg\n' ...
+                          ], x_green, y_green);
+
+text(x_green-20, y_green - 400, annotation_str, ...
+    'HorizontalAlignment', 'center', ...
+    'VerticalAlignment', 'top', ...
+    'BackgroundColor', 'w', 'EdgeColor', 'k', 'Margin', 5);
+
+% Tuning Assi (Zoom sulla zona interessante)
+ylim([min(y_feas)-200, max(y_feas)+200]);
+xlim([min(x_feas)-10, max(x_feas)+10]);
+ylim([6500 9800]);
+xlim([270 420]);
+
+saveas(gcf, 'Pareto_Frontier_Design_zoom.png');
+disp('Grafico Pareto generato.');

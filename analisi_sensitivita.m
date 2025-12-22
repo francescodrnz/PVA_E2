@@ -154,7 +154,7 @@ for k = 1:num_targets
     c.Label.String = dom_name; % Nome variabile dominante
     
     set(f1, 'PaperPositionMode', 'auto');
-    saveas(f1, ['Impact_MainEffects_' current_suffix '.png']);
+    saveas(f1, ['ESPANSO_Impact_MainEffects_' current_suffix '.png']);
     
     % --- PLOT 2: SENSITIVITY (Bar Plot) ---
     f2 = figure('Name', ['Sensitivity_' current_suffix], 'Color', 'w', 'Position', fig_pos);
@@ -177,7 +177,7 @@ for k = 1:num_targets
     xline(0, 'k-', 'LineWidth', 1);
     
     set(f2, 'PaperPositionMode', 'auto');
-    saveas(f2, ['Impact_Sensitivity_' current_suffix '.png']);
+    saveas(f2, ['ESPANSO_Impact_Sensitivity_' current_suffix '.png']);
     
     % Chiudo le figure come richiesto
     close(f1); 

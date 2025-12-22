@@ -127,7 +127,7 @@ P_em_hist(idx)  = 0;
 % Assumo che E_batt sia l'energia CONSUMATA.
 SoC_hist = 100 * (1 - E_batt ./ E_batt_total_capacity);
 
-%% --- 1. DEFINIZIONE STILI E COLORI ---
+%% --- 1. eDEFINIZIONE STILI E COLORI ---
 % Palette colori professionale
 col_ice   = [0.8500 0.3250 0.0980]; % Arancione
 col_em    = [0.4660 0.6740 0.1880]; % Verde
@@ -172,7 +172,7 @@ ylabel('Massa Velivolo [kg]', 'FontWeight', 'bold', 'Color', col_fuel);
 ax = gca; ax.YColor = col_fuel;
 xlim([0, t_std(end)]);
 
-title('\textbf{Profilo di Missione e Fasi di Volo}', 'Interpreter', 'latex', 'FontSize', 14);
+title('\textbf{Profilo di Missione e Fasi di Volo}', 'Interpreter', 'latex', 'FontSize', 12);
 
 % --- Etichette Fasi (Sopra la quota) ---
 yyaxis left
@@ -229,7 +229,7 @@ plot(t_std, P_ice_hist(1:end_std)/1000, 'Color', col_ice, 'LineWidth', 1.5);
 p_tot = plot(t_std, P_tot_inst/1000, '--', 'Color', [0.3 0.3 0.3], 'LineWidth', 1.2);
 
 ylabel('Potenza [kW]', 'FontWeight', 'bold');
-ylim([0, 7000]); 
+ylim([0, 6600]); 
 ax = gca; ax.YColor = 'k';
 
 % --- ASSE DESTRO: PHI EM ---
@@ -237,7 +237,7 @@ yyaxis right
 p_phi = plot(t_std, phi_em_inst, '-.', 'Color', [0.2 0.5 0.2], 'LineWidth', 1.5);
 ylabel('Frazione Potenza Elettrica \Phi_{EM}', 'FontWeight', 'bold', 'Color', [0.2 0.5 0.2]);
 ax = gca; ax.YColor = [0.2 0.5 0.2];
-ylim([0, 1.05]); 
+ylim([0, 1]); 
 
 % --- FIX GRIGLIA "INVISIBLE" ---
 % Definisco i ticks esatti che voglio vedere (0, 0.2, 0.4...)
@@ -299,6 +299,7 @@ yyaxis left
 fuel_consumed = W(1) - W(1:end_std);
 plot(t_std, fuel_consumed, 'Color', col_fuel, 'LineWidth', 2);
 ylabel('Fuel Consumato [kg]', 'FontWeight', 'bold', 'Color', col_fuel);
+ylim([0 320])
 ax = gca; ax.YColor = col_fuel;
 grid on; hold on;
 
@@ -319,7 +320,7 @@ yyaxis right
 plot(t_std, SoC_hist(1:end_std), 'Color', col_em, 'LineWidth', 2);
 ylabel('SoC Batteria [%]', 'FontWeight', 'bold', 'Color', col_em, 'Interpreter', 'none');
 ax = gca; ax.YColor = col_em;
-ylim([0 105]);
+ylim([0 100]);
 
 % Boxino BATTERIA (Verde) - Posizionato in basso a destra (dove finisce la curva)
 % Lo alzo leggermente (coord Y = 10%) per non farlo toccare terra
@@ -359,7 +360,7 @@ if end_div > start_div
     tiledlayout(1, 2, 'TileSpacing', 'compact', 'Padding', 'compact');
     
     % --- PLOT D1: Profilo di Volo Diversione ---
-    nexttile;
+    nexttile;profi
     area(t_div, quota(start_div:end_div), 'FaceColor', [0.95 0.95 0.95], 'EdgeColor', col_tot, 'LineWidth', 1.5);
     hold on;
     yline(h_cruise_diversion, '--', 'Color', [0.5 0.5 0.5], 'Label', 'Quota Crociera Div.');
@@ -416,9 +417,9 @@ fprintf('\n--- CALCOLO METRICHE AMBIENTALI ---\n');
 
 % --- 1. DATI & COSTANTI ---
 EI_CO2 = 3.16;          % [kg CO2 / kg Fuel] Emission Index standard Jet-A1
-Energy_Density_Fuel = 43; % [MJ/kg] Densità energetica specifica Kerosene
+Energy_Density_Fuel = 43.1; % [MJ/kg] Densità energetica specifica Kerosene
 N_pax = 40;             % Numero passeggeri
-Range_km = range_cruise + 0; % [km] Assumiamo il range di progetto (556 km) 
+Range_km = range + 0; % [km] Assumiamo il range di progetto (556 km) 
 % Nota: se range_cruise è in km bene, se in nm converti: range_cruise*1.852
 
 % --- 2. CALCOLI PER IL TUO AEREO (Hybrid) ---

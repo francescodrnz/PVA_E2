@@ -24,7 +24,7 @@ end
 
 % --- 3. IDENTIFICAZIONE CONFIGURAZIONI ---
 % A) REFERENCE: BEST FUEL
-[~, idx_ref] = min(abs(data.W_block_fuel-298.77));
+[~, idx_ref] = min(abs(data.W_block_fuel-306.86));
 
 % B) TARGET: DESIGN SCELTO
 target_WS = 300; 
@@ -162,5 +162,5 @@ str_ref = sprintf('Block Fuel Inferiore (W/S=%d, H_P=%.1f, \\Phi=[%.1f, %.1f, %.
 legend({str_ref, str_scelto}, ...
     'Location', 'southoutside', 'Orientation', 'vertical', 'FontSize', 11);
 
-title('Confronto configurazione scelta vs. < 2 MW con block fuel inferiore', 'FontSize', 14, 'FontWeight', 'bold');
-saveas(gcf, 'Radar_Comparison.png');
+title('Confronto configurazione scelta vs. block fuel inferiore sul fronte di Pareto', 'FontSize', 14, 'FontWeight', 'bold');
+saveas(gcf, 'Espanso_Radar_Comparison.png');
